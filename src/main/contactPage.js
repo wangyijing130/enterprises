@@ -13,6 +13,7 @@ class ContactPage extends Component {
                 style={[styles.icon, {tintColor: tintColor}]}
             />
         ),
+        headerTitle: '通讯录'
     };
 
     render() {

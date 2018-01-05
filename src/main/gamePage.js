@@ -13,7 +13,9 @@ class GamePage extends Component {
                 style={[styles.icon, {tintColor: tintColor}]}
             />
         ),
+        headerTitle: '游戏'
     };
+
     render() {
         return (
             <View style={styles.container}>

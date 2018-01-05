@@ -1,10 +1,12 @@
 import React from 'react';
 import {StackNavigator} from 'react-navigation'; // 路由导航
+import {Text, View} from "react-native";
 import {FindAccountPage} from './login/findAccountPage';
+import {RegPage} from './login/regPage';
 import LoginPage from './login/loginPage';
-import RegPage from './login/regPage';
 import {MainNavigator} from './main/main'; // 主页面路由导航
 import storage from './common/storage'; // 本地存储全局对象
+import {THEME} from './assets/css/color';
 
 
 const App = StackNavigator({
@@ -14,11 +16,25 @@ const App = StackNavigator({
     Main: { // 主页面
         screen: MainNavigator, // tab导航配置
         navigationOptions: ({navigation}) => ({
-            header: null // 去头部
+            // header: null // 去头部,
+            headerLeft: <View></View>,
+            headerRight: <View></View>
         })
     }
 }, {
     initialRouteName: 'Login', // 默认登录页
-    headerMode: 'screen'
+    headerMode: 'screen',
+    navigationOptions: {
+        headerTintColor: 'white',
+        headerStyle: {
+            backgroundColor: THEME,
+            height: 44,
+        },
+        headerTitleStyle: {
+            fontSize: 16,
+            alignSelf: 'center'
+        },
+        headerRight: <View></View>
+    }
 });
 export default App;

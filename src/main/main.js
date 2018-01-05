@@ -1,6 +1,6 @@
 import React from 'react';
 import {TabNavigator} from 'react-navigation';
-import {THEME} from '../assets/css/color';
+import {THEME, THEME_LIGHT} from '../assets/css/color';
 import MessagePage from './messagePage';
 import ContactPage from './contactPage';
 import GamePage from './gamePage';
@@ -17,14 +17,15 @@ export const MainNavigator = TabNavigator({
             activeTintColor: 'white',
             style: {
                 backgroundColor: THEME,
+                marginBottom: -1.5
             },
             tabStyle: {
-                paddingTop: 8,
+                paddingTop: 4,
                 paddingBottom: 4,
             },
             labelStyle: {
                 marginTop: 0,
-                marginBottom: 0
+                marginBottom: 0,
             },
             showIcon: true  // 显示图标
         }

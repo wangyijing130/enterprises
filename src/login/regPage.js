@@ -1,22 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert} from 'react-native';
-import {NavigationActions} from 'react-navigation';
-import {connect} from 'react-redux'; // 引入connect函数
-import * as registerAction from './registerAction';// 导入action方法
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
-import {getStackOptions} from '../common/navigatorOpts';
 import CButton from '../common/button';
 
-// 清空导航记录，跳转到首页
-const resetAction = NavigationActions.reset({
-    index: 0,
-    actions: [
-        NavigationActions.navigate({routeName: 'Login'})
-    ]
-});
-
-class RegPage extends Component {
-    static navigationOptions = getStackOptions('注册');
+export class RegPage extends Component {
+    static navigationOptions = {
+        title: '注册',
+    };
     mobile = '';
     password = '';
     password2 = '';
@@ -24,16 +14,6 @@ class RegPage extends Component {
     constructor(props) {
         super(props);
         this.state = {message: ''};
-    }
-
-    // 状态更新
-    shouldComponentUpdate(nextProps, nextState) {
-        // 注册成功,切到登录
-        if (nextProps.status === '注册成功' && nextProps.isSuccess) {
-            this.props.navigation.dispatch(resetAction);
-            return false;
-        }
-        return true;
     }
 
     updateState(key, val) {
@@ -63,10 +43,6 @@ class RegPage extends Component {
         reg(this.mobile, this.password);
     }
 
-    goBack() {
-        this.props.navigation.goBack();
-    }
-
     render() {
         let message = this.state && this.state.message ? this.state.message : '';
         return (
@@ -82,7 +58,6 @@ class RegPage extends Component {
                            onChangeText={(text) => this.password2 = text}/>
                 <CButton style={styles.regInput} title={'提交'} onPress={() => this.doReg()}/>
                 <Text style={styles.message}>{message}</Text>
-                <Text style={{marginTop: 16, fontSize: 12}}>状态: {this.props.status}</Text>
             </View>
         )
     }
@@ -105,13 +80,3 @@ const styles = StyleSheet.create({
         fontSize: 14
     }
 });
-
-export default connect(
-    (state) => ({
-        status: state.reg.status,
-        isSuccess: state.reg.isSuccess
-    }),
-    (dispatch) => ({
-        reg: (u, p) => dispatch(registerAction.reg(u, p)),
-    })
-)(RegPage)

@@ -22,6 +22,7 @@ class PersonPage extends Component {
                 style={[styles.icon, {tintColor: tintColor}]}
             />
         ),
+        headerTitle: '我的'
     };
     componentWillMount() {
         this.checkLogin();

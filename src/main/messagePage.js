@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {THEME_BACKGROUND} from '../assets/css/color';
+import {THEME, THEME_BACKGROUND} from '../assets/css/color';
 
 
 class MessagePage extends Component {
@@ -13,7 +13,9 @@ class MessagePage extends Component {
                 style={[styles.icon, {tintColor: tintColor}]}
             />
         ),
+        headerTitle: '留言'
     };
+
     render() {
         return (
             <View style={styles.container}>

@@ -1,20 +1,13 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {NavigationActions} from 'react-navigation';
 import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
-import {getStackOptions} from '../common/navigatorOpts';
 import CButton from '../common/button';
 
-// 清空导航记录，跳转到首页
-const resetAction = NavigationActions.reset({
-    index: 0,
-    actions: [
-        NavigationActions.navigate({routeName: 'Login'})
-    ]
-});
 
 export class FindAccountPage extends Component {
-    static navigationOptions = getStackOptions('找回密码');
+    static navigationOptions = {
+        title: '找回密码'
+    };
     mobile = '';
     code = '';
     password = '';
@@ -114,7 +107,7 @@ export class FindAccountPage extends Component {
                 <TextInput style={styles.regInput} placeholder='确认密码' secureTextEntry={true}
                            autoCapitalize={'none'} maxLength={20}
                            onChangeText={(text) => this.password2 = text}/>
-                <CButton style={styles.regInput} title={'找回密码'} onPress={() => this.doSubmit()}/>
+                <CButton style={styles.regInput} title={'完成'} onPress={() => this.doSubmit()}/>
                 <Text style={styles.message}>{message}</Text>
             </View>
         )
