@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {THEME, THEME_BACKGROUND, THEME_TEXT} from '../assets/css/color';
+import {THEME, THEME_BACKGROUND, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
 import CButton from '../common/button';
+import Toast, {DURATION} from 'react-native-easy-toast';
+import {layoutStyles} from '../assets/css/layout';
+import {loginStyles as styles} from './loginStyle';
 
 export class RegPage extends Component {
     static navigationOptions = {
@@ -11,72 +14,58 @@ export class RegPage extends Component {
     password = '';
     password2 = '';
 
-    constructor(props) {
-        super(props);
-        this.state = {message: ''};
-    }
-
-    updateState(key, val) {
-        let state = this.state;
-        state[key] = val;
-        this.setState(state);
-    }
-
     doReg() {
-        const {reg} = this.props;
+        this.refs.textInputMobile.blur();
+        this.refs.textInputPwd.blur();
+        this.refs.textInputPwd2.blur();
         if (!this.mobile) {
-            this.updateState('message', '请输入手机号码');
+            this.refs.toast.show('请输入手机号码');
             return;
         }
         if (!this.password) {
-            this.updateState('message', '请输入登录密码');
+            this.refs.toast.show('请输入登录密码');
             return;
         }
         if (!this.password2) {
-            this.updateState('message', '请输入确认密码');
+            this.refs.toast.show('请输入确认密码');
             return;
         }
         if (this.password !== this.password2) {
-            this.updateState('message', '前后两次密码不一致');
+            this.refs.toast.show('前后两次密码不一致');
             return;
         }
-        reg(this.mobile, this.password);
+        fetch('https://localhost:8088/reg')
+            .then((res) => {
+                this.refs.toast.show('注册成功');
+                this.props.navigation.goBack();
+            }).catch((e) => {
+            this.refs.toast.show(e.message);
+        })
     }
 
     render() {
-        let message = this.state && this.state.message ? this.state.message : '';
         return (
-            <View style={styles.regPage}>
-                <TextInput style={styles.regInput} placeholder='手机号码' keyboardType={'numeric'}
-                           autoCapitalize={'none'} maxLength={20}
-                           onChangeText={(text) => this.mobile = text}/>
-                <TextInput style={styles.regInput} placeholder='密码' secureTextEntry={true}
-                           autoCapitalize={'none'} maxLength={20}
-                           onChangeText={(text) => this.password = text}/>
-                <TextInput style={styles.regInput} placeholder='确认密码' secureTextEntry={true}
-                           autoCapitalize={'none'} maxLength={20}
-                           onChangeText={(text) => this.password2 = text}/>
-                <CButton style={styles.regInput} title={'提交'} onPress={() => this.doReg()}/>
-                <Text style={styles.message}>{message}</Text>
+            <View style={styles.body}>
+                <View style={[styles.container, regStyles.regSection]}>
+                    <TextInput style={styles.textInput} placeholder='手机号码' keyboardType={'numeric'}
+                               ref='textInputMobile' autoCapitalize={'none'} maxLength={11}
+                               onChangeText={(text) => this.mobile = text}/>
+                    <TextInput style={styles.textInput} placeholder='密码' secureTextEntry={true}
+                               ref='textInputPwd' autoCapitalize={'none'} maxLength={20}
+                               onChangeText={(text) => this.password = text}/>
+                    <TextInput style={styles.textInput} placeholder='确认密码' secureTextEntry={true}
+                               ref='textInputPwd2' autoCapitalize={'none'} maxLength={20}
+                               onChangeText={(text) => this.password2 = text}/>
+                    <CButton style={styles.submitButton} title={'提交'} onPress={() => this.doReg()}/>
+                </View>
+                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
             </View>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    regPage: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: THEME_BACKGROUND
+const regStyles = StyleSheet.create({
+    regSection: {
+        marginTop: 32
     },
-    regInput: {
-        marginBottom: 8
-    },
-    message: {
-        marginTop: 16,
-        color: THEME_TEXT,
-        fontSize: 14
-    }
 });

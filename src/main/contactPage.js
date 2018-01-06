@@ -42,7 +42,9 @@ const styles = StyleSheet.create({
 
 export default connect(
     (state) => ({
-        user: state.user
+        status: state.loginIn.status,
+        isSuccess: state.loginIn.isSuccess,
+        user: state.loginIn.user
     }),
     (dispatch) => ({})
 )(ContactPage)

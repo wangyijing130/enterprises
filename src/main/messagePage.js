@@ -43,7 +43,7 @@ export default connect(
     (state) => ({
         status: state.loginIn.status,
         isSuccess: state.loginIn.isSuccess,
-        user: state.loginIn.user,
+        user: state.loginIn.user
     }),
     (dispatch) => ({})
 )(MessagePage)

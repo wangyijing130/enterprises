@@ -12,6 +12,7 @@ export default class CButton extends Component<{
     disabled?: ?boolean,
     testID?: ?string,
     hasTVPreferredFocus?: ?boolean,
+    style?: ?any,
 }> {
     static propTypes = {
         title: PropTypes.string.isRequired,
@@ -29,6 +30,7 @@ export default class CButton extends Component<{
          * @platform ios
          */
         hasTVPreferredFocus: PropTypes.bool,
+        style: PropTypes.any
     };
 
     /**
@@ -42,7 +44,7 @@ export default class CButton extends Component<{
 
      * */
     render() {
-        const {accessibilityLabel, color, onPress, title, hasTVPreferredFocus, disabled, testID,} = this.props;
+        const {accessibilityLabel, color, onPress, title, hasTVPreferredFocus, disabled, testID, style} = this.props;
         const buttonStyles = [styles.button];
         const textStyles = [styles.text];
         if (color) {
@@ -64,6 +66,10 @@ export default class CButton extends Component<{
         );
         const formattedTitle = Platform.OS === 'android' ? title.toUpperCase() : title;
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+        const lastStyle = [buttonStyles];
+        if (style) {
+            lastStyle.push(style);
+        }
         return (
             <Touchable
                 accessibilityComponentType='button'
@@ -73,7 +79,7 @@ export default class CButton extends Component<{
                 testID={testID}
                 disabled={disabled}
                 onPress={onPress}>
-                <View style={buttonStyles}>
+                <View style={lastStyle}>
                     <Text style={textStyles} disabled={disabled}>{formattedTitle}</Text>
                 </View>
             </Touchable>

@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Modal} from 'react-native';
 import {connect} from 'react-redux'; // 引入connect函数
 import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
-import {THEME_BACKGROUND, THEME_LABEL, THEME_TEXT} from '../assets/css/color';
+import {THEME_BACKGROUND, THEME_LABEL, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
 import CButton from '../common/button';
+import Toast, {DURATION} from 'react-native-easy-toast';
+import {layoutStyles} from '../assets/css/layout';
+import {loginStyles as styles} from './loginStyle';
 
 // 清空导航记录，跳转到首页
 const resetAction = NavigationActions.reset({
@@ -25,11 +28,13 @@ class LoginPage extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {message: ''};
+        this.checkHasLogin();
     }
 
-    componentWillMount() {
-        this.checkHasLogin();
+    componentDidUpdate() {
+        if (this.props.status === '登录出错') {
+            this.refs.toast.show('登录出错');
+        }
     }
 
     checkHasLogin() {
@@ -49,7 +54,7 @@ class LoginPage extends Component {
     // 状态更新，判断是否登录并作出处理
     shouldComponentUpdate(nextProps, nextState) {
         // 登录完成,切成功登录
-        if (nextProps.status === '登陆成功' && nextProps.isSuccess) {
+        if (nextProps.status === '登录成功' && nextProps.isSuccess) {
             // this.props.navigation.dispatch(resetAction);
             this.checkHasLogin();
             return false;
@@ -57,20 +62,16 @@ class LoginPage extends Component {
         return true;
     }
 
-    updateState(key, val) {
-        let state = this.state;
-        state[key] = val;
-        this.setState(state);
-    }
-
     doLogin() {
         const {login} = this.props;
+        this.refs.textInputMobile.blur();
+        this.refs.textInputPwd.blur();
         if (!this.mobile) {
-            this.updateState('message', '请输入手机号码');
+            this.refs.toast.show('请输入手机号码');
             return;
         }
         if (!this.password) {
-            this.updateState('message', '请输入密码');
+            this.refs.toast.show('请输入密码');
             return;
         }
         login(this.mobile, this.password);
@@ -85,44 +86,29 @@ class LoginPage extends Component {
     }
 
     render() {
-        const {login} = this.props;
-        let message = this.state && this.state.message ? this.state.message : '';
         return (
-            <View style={styles.loginPage}>
-                <View style={styles.loginSection}>
-                    <Text style={styles.loginTitle}>雅云 1.0</Text>
-                    <TextInput style={styles.loginInput} placeholder='手机号码' keyboardType={'numeric'}
-                               defaultValue={this.mobile} autoCapitalize={'none'} maxLength={11}
+            <View style={styles.body}>
+                <View style={styles.container}>
+                    <Text style={loginStyles.loginTitle}>雅云 1.0</Text>
+                    <TextInput style={styles.textInput} placeholder='手机号码' keyboardType={'numeric'}
+                               underlineColorAndroid={'transparent'}
+                               ref='textInputMobile' defaultValue={this.mobile} autoCapitalize={'none'} maxLength={11}
                                onChangeText={(text) => this.mobile = text}/>
-                    <TextInput style={styles.loginInput} placeholder='password' secureTextEntry={true}
-                               defaultValue={this.password} autoCapitalize={'none'} maxLength={20}
+                    <TextInput style={styles.textInput} placeholder='登录密码' secureTextEntry={true}
+                               ref='textInputPwd' defaultValue={this.password} autoCapitalize={'none'} maxLength={20}
                                onChangeText={(text) => this.password = text}/>
-                    <CButton style={styles.loginInput} title={'登录'} onPress={() => this.doLogin()}/>
-                    <View style={styles.subButton}>
-                        <Text style={styles.subButtonText} onPress={() => this.doReg()}>免费注册</Text>
-                        <Text style={styles.subButtonText} onPress={() => this.findAccount()}>找回密码</Text>
+                    <CButton style={styles.submitButton} title={'登录'} onPress={() => this.doLogin()}/>
+                    <View style={loginStyles.subButton}>
+                        <Text style={loginStyles.subButtonText} onPress={() => this.doReg()}>免费注册</Text>
+                        <Text style={loginStyles.subButtonText} onPress={() => this.findAccount()}>找回密码</Text>
                     </View>
-                    <Text style={styles.message}>{message}</Text>
-                    <Text style={{marginTop: 16, fontSize: 12}}>状态: {this.props.status}</Text>
                 </View>
+                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
             </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    loginPage: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
-        padding: 20,
-        backgroundColor: THEME_BACKGROUND
-    },
-    loginSection: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 20
-    },
+export const loginStyles = StyleSheet.create({
     loginTitle: {
         fontSize: 28,
         fontWeight: '500',
@@ -134,20 +120,12 @@ const styles = StyleSheet.create({
     subButton: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 8
+        marginTop: 32
     },
     subButtonText: {
         color: THEME_TEXT,
         fontSize: 14
     },
-    loginInput: {
-        marginBottom: 8
-    },
-    message: {
-        marginTop: 16,
-        color: THEME_TEXT,
-        fontSize: 14
-    }
 });
 
 export default connect(

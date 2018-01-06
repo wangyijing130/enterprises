@@ -24,6 +24,7 @@ class PersonPage extends Component {
         ),
         headerTitle: '我的'
     };
+
     componentWillMount() {
         this.checkLogin();
     }
