@@ -1,6 +1,6 @@
 import React from 'react';
 import {StackNavigator} from 'react-navigation'; // 路由导航
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {FindAccountPage} from './login/findAccountPage';
 import {RegPage} from './login/regPage';
 import LoginPage from './login/loginPage';

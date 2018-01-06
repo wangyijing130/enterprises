@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Modal, Button} from 'react-native';
+import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {connect} from 'react-redux'; // 引入connect函数
 import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
-import {THEME_BACKGROUND, THEME_LABEL, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
+import {THEME_LABEL, THEME_TEXT} from '../assets/css/color';
 import CButton from '../common/button';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
 

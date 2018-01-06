@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
-import {THEME, THEME_BACKGROUND, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
+import {View, StyleSheet, TextInput} from 'react-native';
+import {THEME_TEXT} from '../assets/css/color';
 import CButton from '../common/button';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
 
