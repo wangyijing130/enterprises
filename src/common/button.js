@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity, Touchable, TouchableNativeFeedback, Platform} from 'react-native';
+import {View, StyleSheet, Text, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
 import {THEME} from '../assets/css/color';
 const PropTypes = require('prop-types');
 const invariant = require('fbjs/lib/invariant');

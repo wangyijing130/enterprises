@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Modal} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Modal, Button} from 'react-native';
 import {connect} from 'react-redux'; // 引入connect函数
 import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
