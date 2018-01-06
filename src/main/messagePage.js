@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, SectionList, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 import {THEME, THEME_BACKGROUND} from '../assets/css/color';
 
@@ -16,10 +16,12 @@ class MessagePage extends Component {
         headerTitle: '留言'
     };
 
+
     render() {
         return (
             <View style={styles.container}>
                 <Text style={{fontSize: 20}}>欢迎来到MessagePage！</Text>
+
             </View>
         )
     }
@@ -36,6 +38,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
         backgroundColor: THEME_BACKGROUND
+    },
+    sectionHeader: {
+        paddingTop: 2,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingBottom: 2,
+        fontSize: 14,
+        fontWeight: 'bold',
+        backgroundColor: 'rgba(247,247,247,1.0)',
+    },
+    item: {
+        padding: 10,
+        fontSize: 18,
+        height: 44,
     }
 });
 

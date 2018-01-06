@@ -42,8 +42,8 @@ class LoginPage extends Component {
             key: 'user',
             autoSync: false,
         }).then(ret => {
-            if (ret && ret.name) {
-                // console.warn('用户已经登录：' + ret.name);
+            console.warn(ret);
+            if (ret && ret.mobile) {
                 this.props.navigation.dispatch(resetAction);
             }
         }).catch(err => {
@@ -55,8 +55,8 @@ class LoginPage extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         // 登录完成,切成功登录
         if (nextProps.status === '登录成功' && nextProps.isSuccess) {
-            // this.props.navigation.dispatch(resetAction);
-            this.checkHasLogin();
+            this.props.navigation.dispatch(resetAction);
+            // this.checkHasLogin();
             return false;
         }
         return true;
@@ -101,6 +101,9 @@ class LoginPage extends Component {
                     <View style={loginStyles.subButton}>
                         <Text style={loginStyles.subButtonText} onPress={() => this.doReg()}>免费注册</Text>
                         <Text style={loginStyles.subButtonText} onPress={() => this.findAccount()}>找回密码</Text>
+                    </View>
+                    <View>
+                        <Text>状态: {this.props.status}</Text>
                     </View>
                 </View>
                 <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
