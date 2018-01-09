@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {THEME} from './color';
+import {THEME, THEME_BACKGROUND} from './color';
 export const layoutStyles = StyleSheet.create({
     mb1: {
         marginBottom: 4
@@ -23,5 +23,20 @@ export const layoutStyles = StyleSheet.create({
     toast: {
         borderRadius: 2,
         padding: 8
+    }
+});
+export const tabStyles = StyleSheet.create({
+    icon: {
+        width: 26,
+        height: 26,
+    }
+});
+export const pageStyles = StyleSheet.create({
+    body: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        padding: 16,
+        backgroundColor: THEME_BACKGROUND
     }
 });

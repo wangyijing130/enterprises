@@ -17,16 +17,20 @@ export const MainNavigator = TabNavigator({
             activeTintColor: 'white',
             style: {
                 backgroundColor: THEME,
-                marginBottom: -1.5
+                // borderTopWidth: 0.5,
+                // borderTopColor: '#ccc',
+                zIndex: 1
             },
+            indicatorStyle: {height: 0}, // 去掉安卓下划线
             tabStyle: {
                 paddingTop: 4,
                 paddingBottom: 4,
             },
             labelStyle: {
-                marginTop: 0,
-                marginBottom: 0,
+                margin: 0
             },
+            swipeEnabled: false,
+            // lazy: true, // 延迟加载
             showIcon: true  // 显示图标
         }
     }

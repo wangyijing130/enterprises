@@ -8,7 +8,8 @@ let user = {
     nikeName: '羿璟',
     age: 30,
     pwd: '123456',
-    mobile: 13510005217
+    mobile: 13510005217,
+    corpName: '湖南长沙市雅云社'
 };
 
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
@@ -28,6 +29,12 @@ export function login(mobile, password) {
          }).catch((e) => {
          dispatch(loginError(false));
          })*/
+    }
+}
+export function reLogin(user) {
+    return dispatch => {
+        dispatch(isLogining());
+        dispatch(loginSuccess(true, user));
     }
 }
 

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image, SectionList, FlatList} from 'react-native';
+import {View, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {THEME, THEME_BACKGROUND} from '../assets/css/color';
+import {tabStyles} from '../assets/css/layout';
+import {MessageList} from '../message/messageList';
 
 
 class MessagePage extends Component {
@@ -10,50 +11,27 @@ class MessagePage extends Component {
         tabBarIcon: ({tintColor}) => (
             <Image
                 source={require('../assets/images/message.png')}
-                style={[styles.icon, {tintColor: tintColor}]}
+                style={[tabStyles.icon, {tintColor: tintColor}]}
             />
         ),
         headerTitle: '留言'
     };
 
 
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={{fontSize: 20}}>欢迎来到MessagePage！</Text>
+    constructor(props) {
+        super(props);
+    }
 
-            </View>
+    render() {
+        if (this.props.user && this.props.user.nikeName) {
+
+        }
+        return (
+            <MessageList/>
         )
     }
 }
 
-const styles = StyleSheet.create({
-    icon: {
-        width: 26,
-        height: 26,
-    },
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 20,
-        backgroundColor: THEME_BACKGROUND
-    },
-    sectionHeader: {
-        paddingTop: 2,
-        paddingLeft: 10,
-        paddingRight: 10,
-        paddingBottom: 2,
-        fontSize: 14,
-        fontWeight: 'bold',
-        backgroundColor: 'rgba(247,247,247,1.0)',
-    },
-    item: {
-        padding: 10,
-        fontSize: 18,
-        height: 44,
-    }
-});
 
 export default connect(
     (state) => ({

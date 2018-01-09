@@ -20,6 +20,10 @@ class ContactPage extends Component {
         return (
             <View style={styles.container}>
                 <Text style={{fontSize: 20}}>欢迎来到ContactPage！</Text>
+                <Image
+                    source={require('../assets/images/notify.png')}
+                    style={[{position: 'absolute', zIndex: 999, bottom: -20, left: 100, width: 46, height: 46}]}
+                />
             </View>
         )
     }

@@ -4,7 +4,9 @@ import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
 import {THEME, THEME_BACKGROUND} from '../assets/css/color';
 import CButton from '../common/button';
-import {layoutStyles} from '../assets/css/layout';
+import {layoutStyles, tabStyles} from '../assets/css/layout';
+import {PersonHeader} from '../person/personHeader';
+import {PersonMenu} from '../person/personMenu';
 
 // 清空导航记录，跳转到登录页
 const resetAction = NavigationActions.reset({
@@ -20,7 +22,7 @@ class PersonPage extends Component {
         tabBarIcon: ({tintColor}) => (
             <Image
                 source={require('../assets/images/person.png')}
-                style={[styles.icon, {tintColor: tintColor}]}
+                style={[tabStyles.icon, {tintColor: tintColor}]}
             />
         ),
         headerTitle: '我的'
@@ -67,9 +69,11 @@ class PersonPage extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <PersonHeader user={this.props.user} />
+                <PersonMenu navigation={this.props.navigation}/>
                 <Text style={{fontSize: 20}}>您好,{this.props.user && this.props.user.nikeName }!</Text>
-                <Text>欢迎使用本产品！</Text>
-                <Text>状态: {this.props.status}</Text>
+                <View><Text>欢迎使用本产品！</Text></View>
+                    <View><Text>状态: {this.props.status}</Text></View>
                 <CButton title={'注销'} onPress={() => this.logout()}/>
                 <CButton style={layoutStyles.mt3} title={'webview'} onPress={() => this.openView()}/>
             </View>
@@ -85,8 +89,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 20,
+        justifyContent: 'flex-start',
+        padding: 0,
         backgroundColor: THEME_BACKGROUND
     }
 });

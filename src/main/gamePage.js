@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {connect} from 'react-redux';
 import {THEME_BACKGROUND} from '../assets/css/color';
+import {tabStyles} from '../assets/css/layout';
 
 
 class GamePage extends Component {
@@ -10,7 +11,7 @@ class GamePage extends Component {
         tabBarIcon: ({tintColor}) => (
             <Image
                 source={require('../assets/images/game.png')}
-                style={[styles.icon, {tintColor: tintColor}]}
+                style={[tabStyles.icon, {tintColor: tintColor}]}
             />
         ),
         headerTitle: '游戏'

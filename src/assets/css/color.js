@@ -1,4 +1,5 @@
 export const THEME = '#92a8d1';
+export const THEME_DARK = '#a7b9da';
 export const THEME_LIGHT = '#dae1ea';
 export const THEME_BACKGROUND = '#f5f5f5';
 export const THEME_LABEL = '#56688a';

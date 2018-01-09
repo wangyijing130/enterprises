@@ -38,13 +38,13 @@ class LoginPage extends Component {
     }
 
     checkHasLogin() {
+        const {reLogin} = this.props;
         global.storage.load({
             key: 'user',
             autoSync: false,
         }).then(ret => {
-            console.warn(ret);
             if (ret && ret.mobile) {
-                this.props.navigation.dispatch(resetAction);
+                reLogin(ret);
             }
         }).catch(err => {
             // console.warn(err.message);
@@ -56,7 +56,6 @@ class LoginPage extends Component {
         // 登录完成,切成功登录
         if (nextProps.status === '登录成功' && nextProps.isSuccess) {
             this.props.navigation.dispatch(resetAction);
-            // this.checkHasLogin();
             return false;
         }
         return true;
@@ -139,5 +138,6 @@ export default connect(
     }),
     (dispatch) => ({
         login: (m, p) => dispatch(loginAction.login(m, p)),
+        reLogin: (u) => dispatch(loginAction.reLogin(u)),
     })
 )(LoginPage)
