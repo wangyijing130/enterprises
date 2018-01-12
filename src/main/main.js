@@ -13,6 +13,7 @@ export const MainNavigator = TabNavigator({
         Person: {screen: PersonPage} // 个人中心
     }, {
         tabBarPosition: 'bottom', // 标签显示在底部
+        swipeEnabled: false,
         tabBarOptions: {
             activeTintColor: 'white',
             style: {
@@ -29,7 +30,6 @@ export const MainNavigator = TabNavigator({
             labelStyle: {
                 margin: 0
             },
-            swipeEnabled: false,
             // lazy: true, // 延迟加载
             showIcon: true  // 显示图标
         }

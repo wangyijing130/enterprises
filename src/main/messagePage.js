@@ -23,7 +23,7 @@ class MessagePage extends Component {
     }
 
     render() {
-        if (this.props.user && this.props.user.nikeName) {
+        if (this.props.user && this.props.user.nickName) {
 
         }
         return (

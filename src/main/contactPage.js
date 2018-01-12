@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {THEME_BACKGROUND} from '../assets/css/color';
+import {THEME_BODY_BG} from '../assets/css/color';
 
 
 class ContactPage extends Component {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
-        backgroundColor: THEME_BACKGROUND
+        backgroundColor: THEME_BODY_BG
     }
 });
 

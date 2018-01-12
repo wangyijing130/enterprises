@@ -8,7 +8,7 @@ import {
     TouchableNativeFeedback,
     Platform
 } from 'react-native';
-import {THEME_TEXT} from '../assets/css/color';
+import {BORDER_COLOR, THEME_TEXT} from '../assets/css/color';
 import {NavigationActions} from 'react-navigation';
 const resetAction = NavigationActions.reset({
     index: 0,
@@ -21,6 +21,22 @@ export class PersonMenu extends Component {
         super(props);
     }
 
+    userInfo() {
+        this.props.navigation.navigate('UserInfo', {user: this.props.user});
+    }
+
+
+    changePwd() {
+        this.props.navigation.navigate('UpdatePwd', {user: this.props.user});
+    }
+
+    feedBack() {
+        this.props.navigation.navigate('FeedBack');
+    }
+
+    clearCache() {
+    }
+
     doLogout() {
         global.storage.remove({key: 'user'});
         this.props.navigation.dispatch(resetAction)
@@ -31,24 +47,34 @@ export class PersonMenu extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.group}>
-                    <View style={styles.groupItem}>
-                        <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>积分:1</Text>
+                    <Touchable onPress={() => this.userInfo()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>个人资料</Text>
                         </View>
-                    </View>
-                    <View style={styles.groupItem}>
-                        <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>虚拟币:1</Text>
+                    </Touchable>
+                    <Touchable onPress={() => this.changePwd()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>修改密码</Text>
                         </View>
-                    </View>
-                    <View style={styles.groupItem}>
-                        <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>VIP:1</Text>
+                    </Touchable>
+                    <Touchable onPress={() => this.feedBack()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>意见反馈</Text>
                         </View>
+                    </Touchable>
+                </View>
+                <View style={styles.group}>
+                    <View style={styles.groupItem}>
+                        <Text style={styles.textLeft}>版本号</Text>
                     </View>
-                    <Touchable style={styles.groupItem} onPress={() => this.doLogout()}>
-                        <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>注销</Text>
+                    <Touchable onPress={() => this.clearCache()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>清除缓存</Text>
+                        </View>
+                    </Touchable>
+                    <Touchable onPress={() => this.doLogout()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>退出账号</Text>
                         </View>
                     </Touchable>
                 </View>
@@ -61,31 +87,28 @@ export class PersonMenu extends Component {
 
 const styles = StyleSheet.create({
         container: {
-            height: 128,
+            // height: 132,
             marginTop: 8,
             marginBottom: 8,
         },
         group: {
+            marginTop: 8,
+            marginBottom: 8,
             backgroundColor: 'white',
-            borderColor: '#ccc',
+            borderColor: BORDER_COLOR,
             borderTopWidth: 1,
             borderBottomWidth: 1,
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            padding: 0,
         },
         groupItem: {
-            flex: 1,
-            // height: 32,
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            borderColor: '#f1f1f3',
+            // flex: 1,
+            paddingLeft: 16,
+            paddingRight: 16,
+            height: 48,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            // alignItems: 'center',
+            borderColor: BORDER_COLOR,
             borderBottomWidth: 1,
-        },
-        viewCenter: {
-            padding: 8
         },
         textLeft: {
             color: THEME_TEXT,

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, Platform,} from 'react-native';
-import {THEME, THEME_BACKGROUND} from '../assets/css/color';
+import {THEME, THEME_BODY_BG} from '../assets/css/color';
 import {layoutStyles, pageStyles} from '../assets/css/layout';
 import Toast from 'react-native-easy-toast';
 import {MessageItem} from '../message/messageItem';
@@ -114,12 +114,12 @@ export class MessageList extends Component {
         }
         const endReachedThreshold = threshold;
         return (
-            <View style={[pageStyles.body, {paddingLeft: 0, paddingRight: 0}]}>
+            <View style={[pageStyles.body, {padding: 0}]}>
                 <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
                 <FlatList data={this.state.list}
                           keyExtractor={this._keyExtractor}
                           onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
-                          onRefresh={() => this._onRefresh()} progressViewOffset={64}
+                          onRefresh={() => this._onRefresh()} progressViewOffset={8}
                           refreshing={this.state.refreshing}
                           renderItem={({item}) => <MessageItem style={msgListStyles.listItem}
                                                                data={item}/>}
@@ -134,9 +134,10 @@ const msgListStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'center',
-        backgroundColor: THEME_BACKGROUND
+        backgroundColor: THEME_BODY_BG
     },
     listItem: {
-        marginBottom: 16
+        marginTop: 8,
+        marginBottom: 8
     }
 });

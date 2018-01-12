@@ -5,10 +5,10 @@ import * as types from '../constants/loginTypes';
 // 模拟用户信息
 let user = {
     name: 'eking',
-    nikeName: '羿璟',
+    nickName: '羿璟',
     age: 30,
     pwd: '123456',
-    mobile: 13510005217,
+    mobile: '13510005217',
     corpName: '湖南长沙市雅云社'
 };
 

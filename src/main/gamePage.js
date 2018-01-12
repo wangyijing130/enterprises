@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, ScrollView, Text, StyleSheet, Dimensions, Image} from 'react-native';
 import {connect} from 'react-redux';
-import {THEME_BACKGROUND} from '../assets/css/color';
-import {tabStyles} from '../assets/css/layout';
-
-
+import {tabStyles, pageStyles} from '../assets/css/layout';
+import {SwiperBox} from '../common/swiper';
 class GamePage extends Component {
     static navigationOptions = {
         tabBarLabel: '游戏',
@@ -17,29 +15,23 @@ class GamePage extends Component {
         headerTitle: '游戏'
     };
 
+    constructor(props) {
+        super(props);
+
+    }
+
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={{fontSize: 20}}>欢迎来到GamePage！</Text>
-            </View>
-        )
+            <ScrollView style={[pageStyles.body, {padding: 0}]}>
+                <SwiperBox/>
+                <View><Text>123213</Text></View>
+            </ScrollView>
+        );
     }
 }
 
-const styles = StyleSheet.create({
-    icon: {
-        width: 26,
-        height: 26,
-    },
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: THEME_BACKGROUND
-    }
-});
+
+const style = StyleSheet.create({});
 
 export default connect(
     (state) => ({

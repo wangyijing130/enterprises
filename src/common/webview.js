@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {WebView, StyleSheet, View} from 'react-native';
-import {THEME, THEME_BACKGROUND} from '../assets/css/color';
-const PropTypes = require('prop-types');
+import {THEME, THEME_BODY_BG} from '../assets/css/color';
 export class CWebView extends Component {
 
     static navigationOptions = ({navigation}) => ({
@@ -40,10 +39,10 @@ export class CWebView extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: THEME_BACKGROUND,
+        backgroundColor: THEME_BODY_BG,
     },
     webView: {
-        backgroundColor: THEME_BACKGROUND,
+        backgroundColor: THEME_BODY_BG,
         marginTop: 1,
         borderColor: THEME,
         borderWidth: 1

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image, FlatList, Platform, RefreshControl} from 'react-native';
-import {THEME_BACKGROUND, THEME_LIGHT} from '../assets/css/color';
+import {THEME_BODY_BG, THEME_LIGHT} from '../assets/css/color';
 
 export class MessageItem extends Component {
     constructor(props) {
@@ -52,9 +52,9 @@ export class MessageItem extends Component {
 
 const styles = StyleSheet.create({
         container: {
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
+            // flex: 1,
+            // flexDirection: 'column',
+            // justifyContent: 'center',
             // padding: 4,
             backgroundColor: 'white'
         },

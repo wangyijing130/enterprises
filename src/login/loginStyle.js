@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet,} from 'react-native';
-import {THEME, THEME_LABEL, THEME_BACKGROUND, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
+import {THEME, THEME_DARK, THEME_BODY_BG, THEME_LIGHT, THEME_TEXT} from '../assets/css/color';
 
 export const loginStyles = StyleSheet.create({
     body: {
@@ -8,7 +8,7 @@ export const loginStyles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         padding: 20,
-        backgroundColor: THEME_BACKGROUND
+        backgroundColor: THEME_BODY_BG
     },
     container: {
         flexDirection: 'column',

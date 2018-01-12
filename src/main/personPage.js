@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import {NavigationActions} from 'react-navigation';
-import {THEME, THEME_BACKGROUND} from '../assets/css/color';
+import {THEME, THEME_BODY_BG} from '../assets/css/color';
 import CButton from '../common/button';
 import {layoutStyles, tabStyles} from '../assets/css/layout';
 import {PersonHeader} from '../person/personHeader';
@@ -68,15 +68,11 @@ class PersonPage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <ScrollView style={styles.container}>
                 <PersonHeader user={this.props.user} />
-                <PersonMenu navigation={this.props.navigation}/>
-                <Text style={{fontSize: 20}}>您好,{this.props.user && this.props.user.nikeName }!</Text>
-                <View><Text>欢迎使用本产品！</Text></View>
-                    <View><Text>状态: {this.props.status}</Text></View>
-                <CButton title={'注销'} onPress={() => this.logout()}/>
-                <CButton style={layoutStyles.mt3} title={'webview'} onPress={() => this.openView()}/>
-            </View>
+                <PersonMenu user={this.props.user} navigation={this.props.navigation}/>
+                <CButton style={layoutStyles.my3} title={'打开百度'} onPress={() => this.openView()}/>
+            </ScrollView>
         )
     }
 }
@@ -87,11 +83,8 @@ const styles = StyleSheet.create({
         height: 26,
     },
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',
         padding: 0,
-        backgroundColor: THEME_BACKGROUND
+        backgroundColor: THEME_BODY_BG
     }
 });
 

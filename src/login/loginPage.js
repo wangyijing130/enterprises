@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TextInput} from 'react-native';
 import {connect} from 'react-redux'; // 引入connect函数
 import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
-import {THEME_LABEL, THEME_TEXT} from '../assets/css/color';
+import {THEME_DARK, THEME_TEXT} from '../assets/css/color';
 import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../assets/css/layout';
@@ -91,7 +91,7 @@ class LoginPage extends Component {
                     <Text style={loginStyles.loginTitle}>雅云 1.0</Text>
                     <TextInput style={styles.textInput} placeholder='手机号码' keyboardType={'numeric'}
                                underlineColorAndroid={'transparent'}
-                               ref='textInputMobile' defaultValue={this.mobile} autoCapitalize={'none'} maxLength={11}
+                               ref='textInputMobile' defaultValue={this.mobile} maxLength={11}
                                onChangeText={(text) => this.mobile = text}/>
                     <TextInput style={styles.textInput} placeholder='登录密码' secureTextEntry={true}
                                ref='textInputPwd' defaultValue={this.password} autoCapitalize={'none'} maxLength={20}
@@ -114,7 +114,7 @@ export const loginStyles = StyleSheet.create({
     loginTitle: {
         fontSize: 28,
         fontWeight: '500',
-        color: THEME_LABEL,
+        color: THEME_DARK,
         textAlign: 'center',
         marginTop: 32,
         marginBottom: 32
