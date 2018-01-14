@@ -1,10 +1,11 @@
 'use strict';
-import * as types from '../constants/loginTypes';
+import * as types from '../app/constants/loginTypes';
 
 const initialState = {
     status: '点击登录',
     isSuccess: false,
     user: null,
+    error: '',
 };
 
 export default function loginIn(state = initialState, action) {
@@ -31,6 +32,7 @@ export default function loginIn(state = initialState, action) {
                 status: '登录出错',
                 isSuccess: true,
                 user: null,
+                error: action.error,
             };
             break;
         default:
