@@ -5,6 +5,7 @@ import {FindAccountPage} from './login/findAccountPage';
 import {RegPage} from './login/regPage';
 import {FeedBackPage} from './person/feedBackPage';
 import LoginPage from './login/loginPage';
+import SplashPage from './main/splashPage';
 import {CWebView} from './common/webview';
 import {MainNavigator} from './main/main'; // 主页面路由导航
 import storage from './common/storage'; // 本地存储全局对象
@@ -15,6 +16,7 @@ import {UpdatePwdPage} from './person/updatePwdPage';
 
 
 const App = StackNavigator({
+    Splash: {screen: SplashPage},// 启动页
     Login: {screen: LoginPage}, // 登录页
     Reg: {screen: RegPage}, // 注册页
     MyView: {screen: CWebView}, // webview
@@ -31,7 +33,7 @@ const App = StackNavigator({
         })
     },
 }, {
-    initialRouteName: 'Login', // 默认登录页
+    initialRouteName: 'Splash', // 默认登录页
     headerMode: 'screen',
     navigationOptions: StackNavOptions,
     transitionConfig: TransitionConfiguration

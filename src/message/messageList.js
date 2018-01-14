@@ -108,7 +108,7 @@ export class MessageList extends Component {
     _keyExtractor = (item, index) => index;
 
     render() {
-        let threshold = 0.1;
+        let threshold = 40;
         if (Platform.OS === 'ios') {
             threshold = 0;
         }
