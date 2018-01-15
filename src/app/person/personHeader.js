@@ -8,9 +8,12 @@ export class PersonHeader extends Component {
     }
 
     render() {
+        let user = this.props.user;
         let photo = 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
-        if (this.props.user && this.props.user.Photo) {
-            photo = this.props.user && this.props.user.Photo;
+        let showName = user.CustomerName;
+        if (user) {
+            photo = user.Photo ? user.Photo : photo;
+            showName = user.NickName ? user.NickName : user.CustomerName;
         }
         return (
             <View style={phStyles.container}>
@@ -22,7 +25,7 @@ export class PersonHeader extends Component {
                     </View>
                     <View style={phStyles.headerInfo}>
                         <View style={phStyles.viewCenter}>
-                            <Text style={phStyles.textLeft}>{this.props.user && this.props.user.CustomerName }</Text>
+                            <Text style={phStyles.textLeft}>{showName}</Text>
                         </View>
                         <View style={phStyles.viewCenter}>
                             <Text style={phStyles.textLeft}>{this.props.user && this.props.user.Tel }</Text>

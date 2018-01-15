@@ -25,6 +25,11 @@ export class PersonMenu extends Component {
         this.props.navigation.navigate('UserInfo', {user: this.props.user});
     }
 
+    companyInfo() {
+
+        // this.props.navigation.navigate('CompanyInfo', {user: this.props.user});
+    }
+
 
     changePwd() {
         this.props.navigation.navigate('UpdatePwd', {user: this.props.user});
@@ -50,6 +55,11 @@ export class PersonMenu extends Component {
                     <Touchable onPress={() => this.userInfo()}>
                         <View style={styles.groupItem}>
                             <Text style={styles.textLeft}>个人资料</Text>
+                        </View>
+                    </Touchable>
+                    <Touchable onPress={() => this.companyInfo()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>商户信息</Text>
                         </View>
                     </Touchable>
                     <Touchable onPress={() => this.changePwd()}>

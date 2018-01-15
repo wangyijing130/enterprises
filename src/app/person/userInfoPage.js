@@ -1,10 +1,34 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, TextInput, ScrollView, Image, Text, Switch} from 'react-native';
+import {
+    View, StyleSheet, Platform, TextInput, ScrollView, Image, Text, Touchable,
+    TouchableOpacity,
+    TouchableNativeFeedback,
+} from 'react-native';
 import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
 import {BORDER_COLOR, THEME_BG, THEME_DARK, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
-import {appService, httpClient} from "../../core/httpInterface";
+import {appService, httpClient} from '../../core/httpInterface';
+const Buffer = require('buffer').Buffer;
+const ImagePicker = require('react-native-image-picker');
+const options = {
+    title: '选择图片',
+    cancelButtonTitle: '取消',
+    takePhotoButtonTitle: '拍照',
+    chooseFromLibraryButtonTitle: '图片库',
+    cameraType: 'back',
+    mediaType: 'photo',
+    maxWidth: 300,
+    maxHeight: 300,
+    quality: 0.75,
+    // videoQuality: 'high',durationLimit: 10,aspectX: 2,aspectY: 1,angle: 0,
+    allowsEditing: true,
+    noData: false,
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+};
 
 export class UserInfoPage extends Component {
     static navigationOptions = {
@@ -22,16 +46,44 @@ export class UserInfoPage extends Component {
         super(props);
         const user = this.props.navigation.state.params.user;
         if (user) {
-            this.customerName = user.CustomerName;
-            this.nickName = user.NickName;
+            this.customerName = user.CustomerName ? user.CustomerName : '';
+            this.nickName = user.NickName ? user.NickName : '';
             this.sex = user.Sex ? user.Sex : '男';
-            this.idCard = user.IdCard;
-            this.address = user.Address;
-            this.introduce = user.Introduce;
+            this.idCard = user.IdCard ? user.IdCard : '';
+            this.address = user.Address ? user.Address : '';
+            this.introduce = user.Introduce ? user.Introduce : '';
             if (this.idCard && this.idCard.length > 10) {
                 this.idCardShow = this.idCard.substr(0, 3) + '*******' + this.idCard.substr(this.idCard.length - 4, 4);
             }
         }
+    }
+
+    openImgPicker() {
+        const user = this.props.navigation.state.params.user;
+        ImagePicker.showImagePicker(options, (response) => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+                if (!response.data || !user) {
+                    return;
+                }
+                let imgbase64 = 'data:image/jpeg;base64,' + response.data;
+                let dataString = 'customerId=' + user.Id + '&imgbase64=' + imgbase64;
+                httpClient.post(appService.UploadImgBase64, dataString).then(res => {
+                    this.refs.toast.show('头像修改成功！');
+                    user.Photo = imgbase64;
+                    if (global.storage) {
+                        global.storage.save({
+                            key: 'user',
+                            data: user
+                        })
+                    }
+                });
+            }
+        });
+
     }
 
     doSubmit() {
@@ -41,11 +93,11 @@ export class UserInfoPage extends Component {
         }
         const user = this.props.navigation.state.params.user;
         let dataString = 'customerId=' + user.Id + '&customerName=' + encodeURIComponent(this.customerName);
-        dataString += '&nickName=' + this.nickName ? encodeURIComponent(this.nickName) : '';
-        dataString += '&sex=' + this.sex ? encodeURIComponent(this.sex) : '';
-        dataString += '&idCard=' + this.idCard ? encodeURIComponent(this.idCard) : '';
-        dataString += '&address=' + this.address ? encodeURIComponent(this.address) : '';
-        dataString += '&introduce=' + this.introduce ? encodeURIComponent(this.introduce) : '';
+        dataString += '&nickName=' + (this.nickName ? encodeURIComponent(this.nickName) : '');
+        dataString += '&sex=' + (this.sex ? encodeURIComponent(this.sex) : '');
+        dataString += '&idCard=' + (this.idCard ? encodeURIComponent(this.idCard) : '');
+        dataString += '&address=' + (this.address ? encodeURIComponent(this.address) : '');
+        dataString += '&introduce=' + (this.introduce ? encodeURIComponent(this.introduce) : '');
         httpClient.post(appService.UpdateCustomerInfo, dataString).then(res => {
             if (res && res.IsSuc) {
                 this.refs.toast.show('修改成功！');
@@ -71,14 +123,17 @@ export class UserInfoPage extends Component {
     }
 
     render() {
+        const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
         const user = this.props.navigation.state.params.user;
         let photo = user.Photo ? user.Photo : 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
         return (
             <ScrollView style={pageStyles.container}>
                 <View style={styles.header}>
-                    <View style={styles.headerImg}>
-                        <Image style={{flex: 1}} source={{uri: photo}}/>
-                    </View>
+                    <Touchable onPress={() => this.openImgPicker()}>
+                        <View style={styles.headerImg}>
+                            <Image style={{flex: 1}} source={{uri: photo}}/>
+                        </View>
+                    </Touchable>
                 </View>
                 <View style={styles.listGroup}>
                     <View style={styles.listGroupItem}>
@@ -137,6 +192,7 @@ export class UserInfoPage extends Component {
                         </View>
                     </View>
                 </View>
+                <CButton style={{margin: 16}} title='头像' onPress={() => this.openImgPicker()}/>
                 <CButton style={{margin: 16}} title='修改' onPress={() => this.doSubmit()}/>
                 <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </ScrollView>
