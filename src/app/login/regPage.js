@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, TextInput} from 'react-native';
 import CButton from '../common/button';
-import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
 import {appService, httpClient} from '../../core/httpInterface';
 import {validUtils} from '../../core/validate';
 import {THEME_TEXT} from '../../assets/css/color';
+import {toastShort} from '../../core/toastUtil';
 
 export class RegPage extends Component {
     static navigationOptions = {
@@ -32,15 +32,15 @@ export class RegPage extends Component {
 
     getCode() {
         if (!this.mobile) {
-            this.refs.toast.show('请输入手机号码');
+            toastShort('请输入手机号码');
             return;
         }
         if (!validUtils.isMobile(this.mobile)) {
-            this.refs.toast.show('请输入正确的手机号码');
+            toastShort('请输入正确的手机号码');
             return;
         }
         if (this.state.sendFlag) {
-            this.refs.toast.show('操作过于频繁');
+            toastShort('操作过于频繁');
             return;
         }
         // 倒计时30s
@@ -75,48 +75,48 @@ export class RegPage extends Component {
         this.refs.textInputPwd.blur();
         this.refs.textInputPwd2.blur();
         if (!this.name) {
-            this.refs.toast.show('请输入用户名');
+            toastShort('请输入用户名');
             return;
         }
         if (!validUtils.isEnOrNum(this.name)) {
-            this.refs.toast.show('用户名只能包含英文字母、数字');
+            toastShort('用户名只能包含英文字母、数字');
             return;
         }
         if (!this.mobile) {
-            this.refs.toast.show('请输入手机号码');
+            toastShort('请输入手机号码');
             return;
         }
         if (!validUtils.isMobile(this.mobile)) {
-            this.refs.toast.show('请输入正确的手机号码');
+            toastShort('请输入正确的手机号码');
             return;
         }
         if (!this.code) {
-            this.refs.toast.show('请输入手机验证码');
+            toastShort('请输入手机验证码');
             return;
         }
         if (this.validCode && this.code !== this.validCode) {
-            this.refs.toast.show('手机验证码不正确');
+            toastShort('手机验证码不正确');
             return;
         }
         if (!validUtils.isEnOrNum(this.password)) {
-            this.refs.toast.show('密码只能包含英文字母、数字');
+            toastShort('密码只能包含英文字母、数字');
             return;
         }
         if (!this.password2) {
-            this.refs.toast.show('请输入确认密码');
+            toastShort('请输入确认密码');
             return;
         }
         if (this.password !== this.password2) {
-            this.refs.toast.show('前后两次密码不一致');
+            toastShort('前后两次密码不一致');
             return;
         }
         let dataString = 'tel=' + this.mobile + '&pwd=' + this.password + '&name=' + this.name + '&invitationCode=';
         httpClient.post(appService.Register, dataString).then(res => {
             if (res && res.IsSuc) {
-                this.refs.toast.show('注册成功');
+                toastShort('注册成功');
                 this.props.navigation.goBack();
             } else {
-                this.refs.toast.show(res.ErrMsg);
+                toastShort(res.ErrMsg);
             }
         });
     }
@@ -149,7 +149,6 @@ export class RegPage extends Component {
                                onChangeText={(text) => this.password2 = text}/>
                     <CButton style={styles.submitButton} title={'提交'} onPress={() => this.doReg()}/>
                 </View>
-                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </View>
         )
     }

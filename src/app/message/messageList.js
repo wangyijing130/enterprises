@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, Platform,} from 'react-native';
 import {THEME, THEME_BODY_BG} from '../../assets/css/color';
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
-import Toast from 'react-native-easy-toast';
 import {MessageItem} from './messageItem';
 
 
@@ -115,7 +114,7 @@ export class MessageList extends Component {
         const endReachedThreshold = threshold;
         return (
             <View style={[pageStyles.body, {padding: 0}]}>
-                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
+
                 <FlatList data={this.state.list}
                           keyExtractor={this._keyExtractor}
                           onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}

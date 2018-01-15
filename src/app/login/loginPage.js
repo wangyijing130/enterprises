@@ -5,10 +5,10 @@ import * as loginAction from './loginAction';// 导入action方法
 import {NavigationActions} from 'react-navigation';
 import {THEME_DARK, THEME_TEXT} from '../../assets/css/color';
 import CButton from '../common/button';
-import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
 import {validUtils} from '../../core/validate';
+import {toastShort} from '../../core/toastUtil';
 
 // 清空导航记录，跳转到首页
 const resetAction = NavigationActions.reset({
@@ -33,7 +33,7 @@ class LoginPage extends Component {
 
     componentDidUpdate() {
         if (this.props.status === '登录出错') {
-            this.refs.toast.show(this.props.error);
+            toastShort(this.props.error);
         }
     }
 
@@ -52,15 +52,15 @@ class LoginPage extends Component {
         this.refs.textInputMobile.blur();
         this.refs.textInputPwd.blur();
         if (!this.mobile) {
-            this.refs.toast.show('请输入手机号码');
+            toastShort('请输入手机号码');
             return;
         }
         if (!validUtils.isMobile(this.mobile)) {
-            this.refs.toast.show('请输入正确的手机号码');
+            toastShort('请输入正确的手机号码');
             return;
         }
         if (!this.password) {
-            this.refs.toast.show('请输入密码');
+            toastShort('请输入密码');
             return;
         }
         login(this.mobile, this.password);
@@ -95,7 +95,7 @@ class LoginPage extends Component {
                         <Text>状态: {this.props.status}</Text>
                     </View>
                 </View>
-                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
+
             </View>
         )
     }

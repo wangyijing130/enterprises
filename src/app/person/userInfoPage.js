@@ -5,10 +5,11 @@ import {
     TouchableNativeFeedback,
 } from 'react-native';
 import CButton from '../common/button';
-import Toast from 'react-native-easy-toast';
+
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
 import {BORDER_COLOR, THEME_BG, THEME_DARK, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
 import {appService, httpClient} from '../../core/httpInterface';
+import {toastShort} from '../../core/toastUtil';
 const Buffer = require('buffer').Buffer;
 const ImagePicker = require('react-native-image-picker');
 const options = {
@@ -72,7 +73,7 @@ export class UserInfoPage extends Component {
                 let imgbase64 = 'data:image/jpeg;base64,' + response.data;
                 let dataString = 'customerId=' + user.Id + '&imgbase64=' + imgbase64;
                 httpClient.post(appService.UploadImgBase64, dataString).then(res => {
-                    this.refs.toast.show('头像修改成功！');
+                    toastShort('头像修改成功！');
                     user.Photo = imgbase64;
                     if (global.storage) {
                         global.storage.save({
@@ -88,7 +89,7 @@ export class UserInfoPage extends Component {
 
     doSubmit() {
         if (!this.customerName) {
-            this.refs.toast.show('用户名不能为空');
+            toastShort('用户名不能为空');
             return;
         }
         const user = this.props.navigation.state.params.user;
@@ -100,7 +101,7 @@ export class UserInfoPage extends Component {
         dataString += '&introduce=' + (this.introduce ? encodeURIComponent(this.introduce) : '');
         httpClient.post(appService.UpdateCustomerInfo, dataString).then(res => {
             if (res && res.IsSuc) {
-                this.refs.toast.show('修改成功！');
+                toastShort('修改成功！');
                 user.CustomerName = this.customerName;
                 user.NickName = this.nickName;
                 user.Sex = this.sex;
@@ -117,7 +118,7 @@ export class UserInfoPage extends Component {
                     this.props.navigation.goBack();
                 }, 1500);
             } else {
-                this.refs.toast.show(res.ErrMsg);
+                toastShort(res.ErrMsg);
             }
         });
     }
@@ -192,9 +193,7 @@ export class UserInfoPage extends Component {
                         </View>
                     </View>
                 </View>
-                <CButton style={{margin: 16}} title='头像' onPress={() => this.openImgPicker()}/>
                 <CButton style={{margin: 16}} title='修改' onPress={() => this.doSubmit()}/>
-                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </ScrollView>
         )
     }

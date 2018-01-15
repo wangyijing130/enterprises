@@ -31,10 +31,6 @@ export const layoutStyles = StyleSheet.create({
     my3: {
         marginTop: 16,
         marginBottom: 16
-    },
-    toast: {
-        borderRadius: 2,
-        padding: 8
     }
 });
 export const tabStyles = StyleSheet.create({

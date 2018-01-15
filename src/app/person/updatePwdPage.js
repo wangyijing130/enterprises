@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, TextInput, Text, ScrollView} from 'react-native';
 import CButton from '../common/button';
-import Toast from 'react-native-easy-toast';
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
 import {BORDER_COLOR, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
-import {appService, httpClient} from "../../core/httpInterface";
-import {validUtils} from "../../core/validate";
+import {appService, httpClient} from '../../core/httpInterface';
+import {validUtils} from '../../core/validate';
+import {toastShort} from '../../core/toastUtil';
 
 export class UpdatePwdPage extends Component {
     static navigationOptions = {
@@ -21,38 +21,38 @@ export class UpdatePwdPage extends Component {
 
     doSubmit() {
         if (!this.password) {
-            this.refs.toast.show('原密码不能为空');
+            toastShort('原密码不能为空');
             return;
         }
         if (!this.newPwd) {
-            this.refs.toast.show('新密码不能为空');
+            toastShort('新密码不能为空');
             return;
         }
         if (!validUtils.isEnOrNum(this.newPwd)) {
-            this.refs.toast.show('新密码只能包含英文字母、数字');
+            toastShort('新密码只能包含英文字母、数字');
             return;
         }
         if (!this.newPwd2) {
-            this.refs.toast.show('确认密码不能为空');
+            toastShort('确认密码不能为空');
             return;
         }
         if (this.newPwd !== this.newPwd2) {
-            this.refs.toast.show('前后两次密码不一致');
+            toastShort('前后两次密码不一致');
             return;
         }
         if (!this.props.navigation.state || !this.props.navigation.state.params || !this.props.navigation.state.params.user) {
-            this.refs.toast.show('无法获取当前用户信息！');
+            toastShort('无法获取当前用户信息！');
             return;
         }
         let dataString = 'tel=' + this.props.navigation.state.params.user.Tel + '&oldpwd=' + this.password + '&newpwd=' + this.newPwd;
         httpClient.post(appService.UpdatePassword, dataString).then(res => {
             if (res && res.IsSuc) {
-                this.refs.toast.show('登录密码修改成功！');
+                toastShort('登录密码修改成功！');
                 setTimeout(() => {
                     this.props.navigation.goBack();
                 }, 1500);
             } else {
-                this.refs.toast.show(res.ErrMsg);
+                toastShort(res.ErrMsg);
             }
         });
     }
@@ -94,7 +94,6 @@ export class UpdatePwdPage extends Component {
                     </View>
                 </View>
                 <CButton style={{margin: 16}} title='修改' onPress={() => this.doSubmit()}/>
-                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </ScrollView>
         )
     }
