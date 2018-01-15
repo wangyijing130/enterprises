@@ -46,8 +46,8 @@ export const tabStyles = StyleSheet.create({
 export const pageStyles = StyleSheet.create({
     body: {
         /*flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-start',*/
+         flexDirection: 'column',
+         justifyContent: 'flex-start',*/
         padding: 16,
         backgroundColor: THEME_BODY_BG
     }

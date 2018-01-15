@@ -115,7 +115,7 @@ export class MessageList extends Component {
         const endReachedThreshold = threshold;
         return (
             <View style={[pageStyles.body, {padding: 0}]}>
-                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
+                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
                 <FlatList data={this.state.list}
                           keyExtractor={this._keyExtractor}
                           onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}

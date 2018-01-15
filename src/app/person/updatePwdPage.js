@@ -4,6 +4,8 @@ import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
 import {BORDER_COLOR, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
+import {appService, httpClient} from "../../core/httpInterface";
+import {validUtils} from "../../core/validate";
 
 export class UpdatePwdPage extends Component {
     static navigationOptions = {
@@ -15,7 +17,6 @@ export class UpdatePwdPage extends Component {
 
     constructor(props) {
         super(props);
-        const user = this.props.navigation.state.params.user;
     }
 
     doSubmit() {
@@ -27,6 +28,10 @@ export class UpdatePwdPage extends Component {
             this.refs.toast.show('新密码不能为空');
             return;
         }
+        if (!validUtils.isEnOrNum(this.newPwd)) {
+            this.refs.toast.show('新密码只能包含英文字母、数字');
+            return;
+        }
         if (!this.newPwd2) {
             this.refs.toast.show('确认密码不能为空');
             return;
@@ -35,18 +40,24 @@ export class UpdatePwdPage extends Component {
             this.refs.toast.show('前后两次密码不一致');
             return;
         }
-        this.props.navigation.goBack();
-        /* fetch('https://localhost:8088/feedback')
-         .then((res) => {
-         this.refs.toast.show('提交成功！');
-         this.props.navigation.goBack();
-         }).catch((e) => {
-         this.refs.toast.show(e.message);
-         });*/
+        if (!this.props.navigation.state || !this.props.navigation.state.params || !this.props.navigation.state.params.user) {
+            this.refs.toast.show('无法获取当前用户信息！');
+            return;
+        }
+        let dataString = 'tel=' + this.props.navigation.state.params.user.Tel + '&oldpwd=' + this.password + '&newpwd=' + this.newPwd;
+        httpClient.post(appService.UpdatePassword, dataString).then(res => {
+            if (res && res.IsSuc) {
+                this.refs.toast.show('登录密码修改成功！');
+                setTimeout(() => {
+                    this.props.navigation.goBack();
+                }, 1500);
+            } else {
+                this.refs.toast.show(res.ErrMsg);
+            }
+        });
     }
 
     render() {
-        const user = this.props.navigation.state.params.user;
         return (
             <ScrollView style={pageStyles.container}>
                 <View style={styles.listGroup}>
@@ -83,7 +94,7 @@ export class UpdatePwdPage extends Component {
                     </View>
                 </View>
                 <CButton style={{margin: 16}} title='修改' onPress={() => this.doSubmit()}/>
-                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
+                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </ScrollView>
         )
     }

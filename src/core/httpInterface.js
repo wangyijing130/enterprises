@@ -14,3 +14,31 @@ export const appService = {
     GetCompanyInfo: root + 'GetCompanyInfo',
     SendSmsCode: root + 'SendSmsCode',
 };
+
+export const httpClient = {
+    post: (url, dataString, headers) => {
+        let defaultHeaders = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        };
+        return new Promise(function (resolve, reject) {
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    ...defaultHeaders,
+                    headers
+                },
+                body: dataString
+            }).then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    reject({status: response.status})
+                }
+            }).then(response => {
+                resolve(response);
+            }).catch(err => {
+                reject({status: -1});
+            })
+        });
+    }
+};

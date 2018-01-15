@@ -5,6 +5,8 @@ import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
+import {validUtils} from '../../core/validate';
+import {appService, httpClient} from '../../core/httpInterface';
 
 
 export class FindAccountPage extends Component {
@@ -15,6 +17,7 @@ export class FindAccountPage extends Component {
     code = '';
     password = '';
     password2 = '';
+    validCode = '';
     timer;
 
     constructor(props) {
@@ -31,20 +34,32 @@ export class FindAccountPage extends Component {
             this.refs.toast.show('请输入手机号码');
             return;
         }
+        if (!validUtils.isMobile(this.mobile)) {
+            this.refs.toast.show('请输入正确的手机号码');
+            return;
+        }
         if (this.state.sendFlag) {
             this.refs.toast.show('操作过于频繁');
             return;
         }
         // 倒计时30s
-        this.updateState('sendFlag', true);
+        this.setState({'sendFlag': true});
+        let dataString = 'tel=' + this.mobile;
+        httpClient.post(appService.SendSmsCode, dataString).then(res => {
+            if (res && res.IsSuc) {
+                if (res.Data) {
+                    this.validCode = res.Data;
+                }
+            }
+        });
         this.timer = setInterval(
             () => {
                 if (this.state.second <= 0) {
-                    this.updateState('second', 0);
-                    this.updateState('sendFlag', false);
+                    this.setState({'second': 0});
+                    this.setState({'sendFlag': false});
                     this.timer && clearInterval(this.timer);
                 } else {
-                    this.updateState('second', this.state.second - 1);
+                    this.setState({'second': this.state.second - 1});
                 }
             },
             1000
@@ -52,11 +67,6 @@ export class FindAccountPage extends Component {
 
     }
 
-    updateState(key, val) {
-        let state = this.state;
-        state[key] = val;
-        this.setState(state);
-    }
 
     doSubmit() {
         this.refs.textInputMobile.blur();
@@ -67,12 +77,20 @@ export class FindAccountPage extends Component {
             this.refs.toast.show('请输入手机号码');
             return;
         }
+        if (!validUtils.isMobile(this.mobile)) {
+            this.refs.toast.show('请输入正确的手机号码');
+            return;
+        }
         if (!this.code) {
             this.refs.toast.show('请输入手机验证码');
             return;
         }
         if (!this.password) {
             this.refs.toast.show('请输入登录密码');
+            return;
+        }
+        if (!validUtils.isEnOrNum(this.password)) {
+            this.refs.toast.show('密码只能包含英文字母、数字');
             return;
         }
         if (!this.password2) {
@@ -83,7 +101,17 @@ export class FindAccountPage extends Component {
             this.refs.toast.show('前后两次密码不一致');
             return;
         }
-        this.props.navigation.goBack();
+        let dataString = 'tel=' + this.mobile + '&newpwd=' + this.password;
+        httpClient.post(appService.ResetPassword, dataString).then(res => {
+            if (res && res.IsSuc) {
+                this.refs.toast.show('重置密码成功！');
+                setTimeout(() => {
+                    this.props.navigation.goBack();
+                }, 2000);
+            } else {
+                this.refs.toast.show(res.ErrMsg);
+            }
+        });
     }
 
     render() {
@@ -112,7 +140,7 @@ export class FindAccountPage extends Component {
                                onChangeText={(text) => this.password2 = text}/>
                     <CButton style={styles.submitButton} title={'完成'} onPress={() => this.doSubmit()}/>
                 </View>
-                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
+                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </View>
         )
     }

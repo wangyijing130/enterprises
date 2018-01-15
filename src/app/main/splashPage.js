@@ -65,7 +65,6 @@ class SplashPage extends Component {
                 }
             }).catch(err => {
                 this.props.navigation.dispatch(resetLoginAction);
-                console.warn(err);
             });
         } else {
 
@@ -94,15 +93,17 @@ export const splashStyles = StyleSheet.create({
         height: deviceHeight,
     },
     contain: {
-        backgroundColor: 'rgba(0,0,0,0.25)',
-        padding: 8,
+        backgroundColor: 'rgba(0,0,0,0.75)',
     },
     text: {
         color: 'white',
         fontWeight: '500',
         fontSize: 20,
         textAlign: 'center',
-        padding: 8,
+        paddingTop: 4,
+        paddingBottom: 4,
+        paddingLeft: 16,
+        paddingRight: 16,
     }
 });
 

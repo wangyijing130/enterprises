@@ -8,6 +8,7 @@ import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles} from '../../assets/css/layout';
 import {loginStyles as styles} from './loginStyle';
+import {validUtils} from '../../core/validate';
 
 // 清空导航记录，跳转到首页
 const resetAction = NavigationActions.reset({
@@ -54,6 +55,10 @@ class LoginPage extends Component {
             this.refs.toast.show('请输入手机号码');
             return;
         }
+        if (!validUtils.isMobile(this.mobile)) {
+            this.refs.toast.show('请输入正确的手机号码');
+            return;
+        }
         if (!this.password) {
             this.refs.toast.show('请输入密码');
             return;
@@ -73,7 +78,7 @@ class LoginPage extends Component {
         return (
             <View style={styles.body}>
                 <View style={styles.container}>
-                    <Text style={loginStyles.loginTitle}>雅云 1.0</Text>
+                    <Text style={loginStyles.loginTitle}>添健 1.0</Text>
                     <TextInput style={styles.textInput} placeholder='手机号码' keyboardType={'numeric'}
                                underlineColorAndroid={'transparent'}
                                ref='textInputMobile' defaultValue={this.mobile} maxLength={11}
@@ -86,11 +91,11 @@ class LoginPage extends Component {
                         <Text style={loginStyles.subButtonText} onPress={() => this.doReg()}>免费注册</Text>
                         <Text style={loginStyles.subButtonText} onPress={() => this.findAccount()}>找回密码</Text>
                     </View>
-                    <View>
+                    <View style={layoutStyles.mt3}>
                         <Text>状态: {this.props.status}</Text>
                     </View>
                 </View>
-                <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
+                <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
             </View>
         )
     }

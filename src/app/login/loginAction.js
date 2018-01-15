@@ -1,7 +1,7 @@
 'use strict';
 
 import * as types from '../constants/loginTypes';
-import {appService} from '../../core/httpInterface';
+import {appService, httpClient} from '../../core/httpInterface';
 
 // 模拟用户信息
 let user = {
@@ -27,13 +27,9 @@ export function login(mobile, password) {
     console.log('登录方法');
     return dispatch => {
         dispatch(isLogining());
-        let result = fetch(appService.Login, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'tel=' + mobile + '&pwd=' + password + '&code=&type=1'
-        }).then((response) => response.json()).then((res) => {
+
+        let dataString = 'tel=' + mobile + '&pwd=' + password + '&code=&type=1';
+        httpClient.post(appService.Login, dataString).then(res => {
             if (res && res.IsSuc) {
                 let u = res.Data;
                 if (typeof res.Data == 'string') {
@@ -80,7 +76,7 @@ function loginSuccess(isSuccess, user) {
         global.storage.save({
             key: 'user',
             data: user
-        }).then(()=>{
+        }).then(() => {
             return {
                 type: types.LOGIN_IN_DONE,
                 user: user,

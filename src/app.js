@@ -31,6 +31,7 @@ let getStorage = () => {
 if (!global.storage) {
     global.storage = getStorage();
 }
+global.appVersion = '1.0.0';
 
 const App = StackNavigator({
     Splash: {screen: SplashPage},// 启动页

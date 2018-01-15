@@ -3,26 +3,31 @@ import {View, StyleSheet, TextInput, ScrollView} from 'react-native';
 import CButton from '../common/button';
 import Toast from 'react-native-easy-toast';
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
+import {appService, httpClient} from "../../core/httpInterface";
 
 export class FeedBackPage extends Component {
     static navigationOptions = {
         title: '意见反馈',
     };
-    opinion = '';
+    contents = '';
 
     doSubmit() {
-        if (!this.opinion) {
+        if (!this.contents) {
             this.refs.toast.show('反馈内容不能为空');
             return;
         }
-        this.props.navigation.goBack();
-        /* fetch('https://localhost:8088/feedback')
-         .then((res) => {
-         this.refs.toast.show('提交成功！');
-         this.props.navigation.goBack();
-         }).catch((e) => {
-         this.refs.toast.show(e.message);
-         });*/
+        let user = this.props.navigation.state.params.user;
+        let dataString = 'customerTel=' + user.Tel + '&contents=' + encodeURIComponent(this.contents);
+        httpClient.post(appService.AddSuggestion, dataString).then(res => {
+            if (res && res.IsSuc) {
+                this.refs.toast.show('意见反馈成功！');
+                setTimeout(() => {
+                    this.props.navigation.goBack();
+                }, 1500);
+            } else {
+                this.refs.toast.show(res.ErrMsg);
+            }
+        });
     }
 
     render() {
@@ -31,11 +36,11 @@ export class FeedBackPage extends Component {
                 <View style={styles.container}>
                     <TextInput style={styles.textInput} placeholder='反馈内容'
                                autoCapitalize={'none'} maxLength={500}
-                               multiline={true}
-                               onChangeText={(text) => this.opinion = text}/>
+                               multiline={true} underlineColorAndroid={'transparent'}
+                               onChangeText={(text) => this.contents = text}/>
 
                     <CButton style={styles.submitButton} title={'提交'} onPress={() => this.doSubmit()}/>
-                    <Toast ref='toast' style={layoutStyles.toast} position={'bottom'}/>
+                    <Toast ref='toast' style={layoutStyles.toast} position={'top'}/>
                 </View>
             </ScrollView>
         )

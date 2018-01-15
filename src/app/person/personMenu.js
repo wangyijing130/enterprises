@@ -31,7 +31,7 @@ export class PersonMenu extends Component {
     }
 
     feedBack() {
-        this.props.navigation.navigate('FeedBack');
+        this.props.navigation.navigate('FeedBack', {user: this.props.user});
     }
 
     clearCache() {
@@ -65,7 +65,10 @@ export class PersonMenu extends Component {
                 </View>
                 <View style={styles.group}>
                     <View style={styles.groupItem}>
-                        <Text style={styles.textLeft}>版本号</Text>
+                        <View style={styles.row}>
+                            <Text style={styles.rowLabel}>版本号</Text>
+                            <Text style={styles.rowText}>{global.appVersion}</Text>
+                        </View>
                     </View>
                     <Touchable onPress={() => this.clearCache()}>
                         <View style={styles.groupItem}>
@@ -114,11 +117,22 @@ const styles = StyleSheet.create({
             color: THEME_TEXT,
             fontSize: 14,
             textAlign: 'left',
+            fontWeight: '500',
         },
-        textCenter: {
-            color: THEME_TEXT,
+        row: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        },
+        rowLabel: {
+            flex: 1,
             fontSize: 14,
-            textAlign: 'center',
+            textAlign: 'left',
+            fontWeight: '500',
         },
+        rowText: {
+            flex: 1,
+            fontSize: 14,
+            textAlign: 'right',
+        }
     })
 ;
