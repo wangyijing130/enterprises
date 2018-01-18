@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Image,} from 'react-native';
 import {THEME, THEME_BODY_BG, THEME_BG, THEME_LIGHT} from '../../assets/css/color';
+import {uploadRoot} from '../../core/httpInterface';
 
 export class PersonHeader extends Component {
     constructor(props) {
@@ -9,10 +10,11 @@ export class PersonHeader extends Component {
 
     render() {
         let user = this.props.user;
-        let photo = 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
+        // let photoSource = 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
+        let photoSource = require('../../assets/images/person.png');
         let showName = user.CustomerName;
         if (user) {
-            photo = user.Photo ? user.Photo : photo;
+            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
             showName = user.NickName ? user.NickName : user.CustomerName;
         }
         return (
@@ -20,7 +22,7 @@ export class PersonHeader extends Component {
                 <View style={phStyles.headerBox}>
                     <View style={phStyles.headerImg}>
                         <Image style={{flex: 1}}
-                               source={{uri: photo}}
+                               source={photoSource}
                         />
                     </View>
                     <View style={phStyles.headerInfo}>

@@ -1,5 +1,6 @@
 const root = 'http://www.tianjian8.com:8002/webservice/AppService.asmx/';
 
+export const uploadRoot = 'http://www.tianjian8.com:8002';
 export const appService = {
     Login: root + 'Login',
     Register: root + 'Register',
@@ -13,6 +14,7 @@ export const appService = {
     AddSuggestion: root + 'AddSuggestion',
     GetCompanyInfo: root + 'GetCompanyInfo',
     SendSmsCode: root + 'SendSmsCode',
+    GetCustomerListByPage: root + 'GetCustomerListByPage',
 };
 
 export const httpClient = {

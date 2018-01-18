@@ -8,7 +8,7 @@ import CButton from '../common/button';
 
 import {layoutStyles, pageStyles} from '../../assets/css/layout';
 import {BORDER_COLOR, THEME_BG, THEME_DARK, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
-import {appService, httpClient} from '../../core/httpInterface';
+import {appService, httpClient, uploadRoot} from '../../core/httpInterface';
 import {toastShort} from '../../core/toastUtil';
 const Buffer = require('buffer').Buffer;
 const ImagePicker = require('react-native-image-picker');
@@ -126,13 +126,16 @@ export class UserInfoPage extends Component {
     render() {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
         const user = this.props.navigation.state.params.user;
-        let photo = user.Photo ? user.Photo : 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
+        let photoSource = require('../../assets/images/person.png');
+        if (user) {
+            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
+        }
         return (
             <ScrollView style={pageStyles.container}>
                 <View style={styles.header}>
                     <Touchable onPress={() => this.openImgPicker()}>
                         <View style={styles.headerImg}>
-                            <Image style={{flex: 1}} source={{uri: photo}}/>
+                            <Image style={{flex: 1}} source={photoSource}/>
                         </View>
                     </Touchable>
                 </View>

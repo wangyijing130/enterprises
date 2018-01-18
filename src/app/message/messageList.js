@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, Platform,} from 'react-native';
-import {THEME, THEME_BODY_BG} from '../../assets/css/color';
-import {layoutStyles, pageStyles} from '../../assets/css/layout';
-import {MessageItem} from './messageItem';
+import {BORDER_COLOR, THEME, THEME_BODY_BG, THEME_DARK} from '../../assets/css/color';
+import {MessageListItem} from './messageItem';
 
 
 export class MessageList extends Component {
@@ -17,37 +16,10 @@ export class MessageList extends Component {
     }
 
     componentDidMount() {
-        let page_no = 1;
-        let url = 'http://120.24.68.187:8080/api.php?act=showdiamonds&openid=D09AC4E940143EF6D26A627FDF9F07C5&pagejsnum=' + this.pageSize + '&actype=json&useropt=0|210|0|210||210||210';
-        url += '&s=0' + (page_no * this.pageSize);
-        fetch(url, {
-            method: 'GET'
-        }).then((response) => {
-            let pageData = this.formatResponse(response);
-            //更新状态机
-            this.setState({
-                list: pageData
-            });
-        }).catch((error) => {
-            if (error) {
-                console.log('error', error);
-            }
-        });
     }
 
     componentWillUnmount() {
         this.timer && clearTimeout(this.timer);
-    }
-
-    formatResponse(response) {
-        let str = '' + JSON.stringify(response);
-        let s = str.indexOf('var jsondata = ') + 15;
-        let e = str.indexOf('];') + 1;
-        let jsonText = str.substring(s, e).replace(/\\/g, '');
-        let json = JSON.parse(jsonText);
-        let pageInfo = json.splice(0, 1);
-        this.pageCount = pageInfo.show_page;
-        return json;
     }
 
     _onRefresh = () => {
@@ -58,24 +30,6 @@ export class MessageList extends Component {
         this.setState({
             refreshing: true,
         });
-        this.timer = setTimeout(() => {
-            let page_no = 1;
-            let url = 'http://120.24.68.187:8080/api.php?act=showdiamonds&openid=D09AC4E940143EF6D26A627FDF9F07C5&pagejsnum=' + this.pageSize + '&actype=json&useropt=0|210|0|210||210||210';
-            url += '&s=0' + (page_no * this.pageSize);
-            fetch(url, {
-                method: 'GET'
-            }).then((response) => {
-                let pageData = this.formatResponse(response);
-                this.setState({
-                    refreshing: false,
-                    list: pageData
-                });
-            }).catch((error) => {
-                if (error) {
-                    console.log('error', error);
-                }
-            });
-        }, 1000);
     };
 
     _onEndReached() {
@@ -83,28 +37,10 @@ export class MessageList extends Component {
             return;
         }
         this.setState({loading: true});
-        this.timer = setTimeout(() => {
-            let page_no = this.pageNo + 1;
-            let url = 'http://120.24.68.187:8080/api.php?act=showdiamonds&openid=D09AC4E940143EF6D26A627FDF9F07C5&pagejsnum=' + this.pageSize + '&actype=json&useropt=0|210|0|210||210||210';
-            url += '&s=0' + (page_no * this.pageSize);
-            fetch(url, {
-                method: 'GET'
-            }).then((response) => {
-                let pageData = this.formatResponse(response);
-                pageData.forEach(item => {
-                    this.state.list.push(item);
-                });
-                this.pageNo = page_no;
-                this.setState({loading: false});
-            }).catch((error) => {
-                if (error) {
-                    console.log('error', error);
-                }
-            });
-        }, 1000);
     }
 
     _keyExtractor = (item, index) => index;
+
 
     render() {
         let threshold = 40;
@@ -112,31 +48,37 @@ export class MessageList extends Component {
             threshold = 0;
         }
         const endReachedThreshold = threshold;
+        let footerText = '我也是有底线的';
+        if (this.state.list.length >= this.pageCount) {
+            footerText = '数据已加载完毕';
+        }
+        let Footer = <View
+            style={msgListStyles.listFooter}><Text>{footerText}</Text></View>;
         return (
-            <View style={[pageStyles.body, {padding: 0}]}>
-
-                <FlatList data={this.state.list}
-                          keyExtractor={this._keyExtractor}
-                          onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
-                          onRefresh={() => this._onRefresh()} progressViewOffset={8}
-                          refreshing={this.state.refreshing}
-                          renderItem={({item}) => <MessageItem style={msgListStyles.listItem}
+            <FlatList data={this.state.list}
+                      keyExtractor={this._keyExtractor}
+                      enableEmptySections={true}
+                      onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
+                      onRefresh={() => this._onRefresh()} progressViewOffset={8}
+                      refreshing={this.state.refreshing}
+                      ListFooterComponent={Footer}
+                      renderItem={({item}) => <MessageListItem style={msgListStyles.listItem}
                                                                data={item}/>}
-                />
-            </View>
+            />
         )
     }
 }
 
 const msgListStyles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        backgroundColor: THEME_BODY_BG
-    },
     listItem: {
         marginTop: 8,
         marginBottom: 8
+    },
+    listFooter: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderColor: BORDER_COLOR,
     }
 });

@@ -13,7 +13,7 @@ import {
 import {uploadRoot} from '../../core/httpInterface';
 import {THEME_DARK, THEME_TEXT} from "../../assets/css/color";
 
-export class MessageListItem extends Component {
+export class ContactListItem extends Component {
     constructor(props) {
         super(props);
     }
@@ -42,13 +42,16 @@ export class MessageListItem extends Component {
                     </View>
                     <View style={styles.headerInfo}>
                         <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>{data.CustomerName?data.CustomerName:'匿名'}</Text>
+                            <Text style={styles.textLeft}>{data.CustomerName}</Text>
                         </View>
                         <Touchable onPress={() => this.callPhone()}>
                             <View style={styles.viewCenter}>
-                                <Text style={styles.textLeft}>说话说话说话！！</Text>
+                                <Text style={styles.textLeft}>{data.Tel}</Text>
                             </View>
                         </Touchable>
+                        <View style={styles.viewCenter}>
+                            <Text style={styles.textLeft}>{data.CompanyName }</Text>
+                        </View>
                     </View>
                 </View>
             </View>
