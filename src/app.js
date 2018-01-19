@@ -14,6 +14,7 @@ import {UserInfoPage} from './app/person/userInfoPage';
 import {UpdatePwdPage} from './app/person/updatePwdPage';
 import {AsyncStorage} from 'react-native';
 import Storage from 'react-native-storage';
+import {CorpGroupNavigator} from './app/corpGroup/corpGroup';
 
 let getStorage = () => {
     let storage = new Storage({
@@ -50,6 +51,7 @@ const App = StackNavigator({
             headerRight: <View></View>
         })
     },
+    CorpGroup: {screen: CorpGroupNavigator},
 }, {
     initialRouteName: 'Splash', // 默认登录页
     headerMode: 'screen',

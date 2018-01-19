@@ -38,7 +38,7 @@ export class SwiperBox extends Component {
         return (
             <Touchable key={item.id} onPress={() => this.openLink(item)}>
                 <View style={style.swiperItem}>
-                    <Image style={style.img} resizeMode='contain'
+                    <Image style={style.img} resizeMode='cover'
                            source={{uri: item.img}}
                     />
                 </View>

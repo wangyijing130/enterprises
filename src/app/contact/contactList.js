@@ -12,17 +12,37 @@ export class ContactList extends Component {
     pageNo = 1;
     pageCount = 0;
     timer;
+    _listRef;
 
     constructor(props) {
         super(props);
-        this.state = {refreshing: false, list: [], loading: false, loaded: true};
+        this.state = {clear: false, refreshing: false, list: [], loading: false, loaded: true};
     }
 
     componentDidMount() {
-        this.search();
+        this.setState({clear: true});
+        this.timer = setTimeout(() => {
+            this.search();
+        }, 2000);
+
+    }
+
+    preSearch() {
+        this.setState({
+            refreshing: true,
+            clear: true,
+            list: []
+        });
+        this.timer = setTimeout(() => {
+            this.search();
+        }, 500);
     }
 
     search() {
+        if (this.state.loading) {
+            return;
+        }
+        this.setState({loading: true});
         this.pageNo = 1;
         let user = this.props.user;
         let dataString = 'pageSize=' + this.pageSize + '&pageIndex=' + this.pageNo + '&customerId=' + user.Id + '&companyId=' + user.CompanyId;
@@ -31,15 +51,16 @@ export class ContactList extends Component {
             if (res.IsSuc && res.Data !== '') {
                 let data = JSON.parse(res.Data);
                 this.pageCount = data.TotalCount;
-                let list = data.Customer;
                 this.setState({
-                    refreshing: false,
-                    list: list
+                    refreshing: false, clear: false,
+                    loading: false,
+                    list: [...this.state.list, ...data.Customer]
                 });
             } else {
                 this.pageCount = 0;
                 this.setState({
                     refreshing: false,
+                    loading: false,
                     list: []
                 });
             }
@@ -77,12 +98,11 @@ export class ContactList extends Component {
     }
 
     _onRefresh = () => {
-        this.setState({
-            refreshing: true,
-        });
         //设置刷新状态为正在刷新
         this.setState({
             refreshing: true,
+            clear: true,
+            list: []
         });
         this.timer = setTimeout(() => {
             this.search();
@@ -105,23 +125,25 @@ export class ContactList extends Component {
     _keyExtractor = (item, index) => item.Id;
 
     header() {
-        let h = <View style={contactListStyles.listHeader}>
-            <TextInput style={{flex: 1}} autoCapitalize={'none'} underlineColorAndroid={'transparent'}
-                       placeholder='联系人姓名' defaultValue={this.keyword} onChangeText={(text) => this.keyword = text}/>
-            <CButton style={{flexBasis: 80}} title='搜索' onPress={() => this.search()}/>
-        </View>;
-
-        return h;
+        return (
+            <View style={contactListStyles.listHeader}>
+                <TextInput style={contactListStyles.searchInput} autoCapitalize={'none'}
+                           underlineColorAndroid={'transparent'}
+                           placeholder='联系人姓名' defaultValue={this.keyword}
+                           onChangeText={(text) => this.keyword = text}/>
+                <CButton style={contactListStyles.searcBtn} title='搜索' onPress={() => this.preSearch()}/>
+            </View>
+        );
     }
 
     footer() {
-        let footerText = '我也是有底线的';
+        let footerText = '努力加载中.....';
         if (this.state.list.length >= this.pageCount) {
             footerText = '数据已加载完毕';
         }
-        let f = <View
-            style={contactListStyles.listFooter}><Text>{footerText}</Text></View>;
-        return f;
+        return (
+            <View style={contactListStyles.listFooter}><Text>{footerText}</Text></View>
+        );
     }
 
     _renderItem = ({item}) => (
@@ -136,19 +158,33 @@ export class ContactList extends Component {
             threshold = 0;
         }
         const endReachedThreshold = threshold;
-        return (
-            <FlatList data={this.state.list}
-                      extraData={this.state}
-                      keyExtractor={this._keyExtractor}
-                      enableEmptySections={true}
-                      onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
-                      onRefresh={() => this._onRefresh()} progressViewOffset={8}
-                      refreshing={this.state.refreshing}
-                      ListHeaderComponent={this.header()}
-                      ListFooterComponent={this.footer()}
-                      renderItem={this._renderItem}
-            />
-        )
+        if (this.state.clear) {
+            let header = this.header();
+            let footer = this.footer();
+            return (
+                <View>
+                    {header}
+                    {footer}
+                </View>
+            )
+        } else {
+            return (
+                <FlatList
+                    ref={(flatList) => this._listRef = flatList}
+                    data={this.state.list}
+                    extraData={this.state}
+                    keyExtractor={this._keyExtractor}
+                    enableEmptySections={true}
+                    onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
+                    onRefresh={() => this._onRefresh()} progressViewOffset={8}
+                    refreshing={this.state.refreshing}
+                    ListHeaderComponent={this.header()}
+                    ListFooterComponent={this.footer()}
+                    renderItem={this._renderItem}
+                />
+            )
+        }
+
     }
 }
 
@@ -163,6 +199,8 @@ const contactListStyles = StyleSheet.create({
         alignItems: 'center',
         borderTopWidth: 1,
         borderColor: BORDER_COLOR,
+        marginTop: 16,
+        padding: 16,
     },
     listHeader: {
         flexDirection: 'row',
@@ -170,7 +208,22 @@ const contactListStyles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 1,
         borderColor: THEME_DARK,
-        height: 46,
+        padding: 0,
+        height: 32,
         backgroundColor: THEME_BODY_BG
+    },
+    searchInput: {
+        flex: 1,
+        paddingTop: 0,
+        paddingBottom: 0,
+        paddingLeft: 8,
+        paddingRight: 8,
+        fontSize: 12,
+        height: 32,
+    },
+    searcBtn: {
+        flexBasis: 60,
+        height: 32,
+        margin: 0
     }
 });

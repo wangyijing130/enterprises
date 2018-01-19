@@ -25,7 +25,10 @@ export class Games extends Component {
             this.props.navigation.navigate('MyView', {url: item.link, title: item.title ? item.title : '链接'});
             return;
         }
-
+        if (item.route) {
+            this.props.navigation.navigate(item.route);
+            return;
+        }
     }
 
     renderList(data) {
@@ -34,10 +37,23 @@ export class Games extends Component {
 
     renderItem(item) {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+        let iconStyle = [styles.appIcon];
+        if (item.bgColor) {
+            let bg = {
+                backgroundColor: item.bgColor,
+            };
+            iconStyle.push(bg);
+        }
+        if (item.color) {
+            let bg = {
+                tintColor: item.color
+            };
+            iconStyle.push(bg);
+        }
         return (
             <Touchable key={item.id} onPress={() => this.openLink(item)}>
                 <View style={styles.appItem}>
-                    <Image resizeMode='contain' style={styles.appIcon} source={{uri: item.icon}}/>
+                    <Image resizeMode='contain' style={iconStyle} source={item.icon}/>
                     <Text style={styles.appLabel}>{item.title}</Text>
                 </View>
             </Touchable>
@@ -47,9 +63,13 @@ export class Games extends Component {
 
     render() {
         const data = this.props.data || [];
+        let GroupName = <View style={{display: 'none'}}></View>;
+        if (this.props.groupName) {
+            GroupName = <View><Text style={styles.groupName}>{this.props.groupName}</Text></View>;
+        }
         return (
             <View style={styles.wrapper}>
-                <View><Text style={styles.groupName}>{this.props.groupName}</Text></View>
+                {GroupName}
                 <View style={styles.app}>
                     {this.renderList(data)}
                 </View>
@@ -64,7 +84,10 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: BORDER_COLOR,
         borderBottomWidth: 1,
-        padding: 16,
+        paddingTop: 8,
+        paddingBottom: 8,
+        paddingLeft: 16,
+        paddingRight: 16,
         marginTop: 8,
         marginBottom: 8,
     },
@@ -84,13 +107,14 @@ const styles = StyleSheet.create({
     },
     appItem: {
         width: 62,
-        margin: 8,
+        margin: 12,
     },
     appIcon: {
         width: 60,
         height: 60,
         borderWidth: 1,
-        borderColor: THEME_BG,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
     },
     appLabel: {
         color: THEME_TEXT,
