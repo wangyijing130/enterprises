@@ -1,18 +1,16 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, FlatList, Platform, TextInput,} from 'react-native';
 import {BORDER_COLOR, THEME_BODY_BG, THEME_DARK} from '../../assets/css/color';
-import {pageStyles} from '../../assets/css/layout';
 import {appService, httpClient} from '../../core/httpInterface';
 import {ContactListItem} from './contactListItem';
 import CButton from '../common/button';
 
 
 export class ContactList extends Component {
-    pageSize = 5;
+    pageSize = 30;
     pageNo = 1;
     pageCount = 0;
     timer;
-    _listRef;
 
     constructor(props) {
         super(props);
@@ -31,7 +29,6 @@ export class ContactList extends Component {
         this.setState({
             refreshing: true,
             clear: true,
-            list: []
         });
         this.timer = setTimeout(() => {
             this.search();
@@ -54,7 +51,7 @@ export class ContactList extends Component {
                 this.setState({
                     refreshing: false, clear: false,
                     loading: false,
-                    list: [...this.state.list, ...data.Customer]
+                    list: data.Customer
                 });
             } else {
                 this.pageCount = 0;
@@ -73,7 +70,7 @@ export class ContactList extends Component {
             return;
         }
         let user = this.props.user;
-        let nextPageNo = this.pageNo;
+        let nextPageNo = this.pageNo + 1;
         let dataString = 'pageSize=' + this.pageSize + '&pageIndex=' + nextPageNo + '&customerId=' + user.Id + '&companyId=' + user.CompanyId;
         dataString += '&customerName=' + (this.keyword ? encodeURIComponent(this.keyword) : '');
         httpClient.post(appService.GetCustomerListByPage, dataString).then(res => {
@@ -86,7 +83,9 @@ export class ContactList extends Component {
                         this.state.list.push(item);
                     });
                 }
-                this.setState({loading: false});
+                this.setState({
+                    loading: false
+                });
             } else {
                 this.setState({loading: false});
             }
@@ -102,7 +101,6 @@ export class ContactList extends Component {
         this.setState({
             refreshing: true,
             clear: true,
-            list: []
         });
         this.timer = setTimeout(() => {
             this.search();
@@ -158,19 +156,11 @@ export class ContactList extends Component {
             threshold = 0;
         }
         const endReachedThreshold = threshold;
-        if (this.state.clear) {
-            let header = this.header();
-            let footer = this.footer();
-            return (
-                <View>
-                    {header}
-                    {footer}
-                </View>
-            )
-        } else {
-            return (
+        let header = this.header();
+        return (
+            <View>
+                {header}
                 <FlatList
-                    ref={(flatList) => this._listRef = flatList}
                     data={this.state.list}
                     extraData={this.state}
                     keyExtractor={this._keyExtractor}
@@ -178,12 +168,12 @@ export class ContactList extends Component {
                     onEndReached={() => this._onEndReached()} onEndReachedThreshold={endReachedThreshold}
                     onRefresh={() => this._onRefresh()} progressViewOffset={8}
                     refreshing={this.state.refreshing}
-                    ListHeaderComponent={this.header()}
+                    // ListHeaderComponent={this.header()}
                     ListFooterComponent={this.footer()}
                     renderItem={this._renderItem}
                 />
-            )
-        }
+            </View>
+        )
 
     }
 }

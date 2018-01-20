@@ -42,11 +42,11 @@ export class ContactListItem extends Component {
                     </View>
                     <View style={styles.headerInfo}>
                         <View style={styles.viewCenter}>
-                            <Text style={styles.textLeft}>{data.CustomerName}</Text>
+                            <Text style={styles.textLeft}>{data.CustomerName?data.CustomerName:'无名氏'}</Text>
                         </View>
                         <Touchable onPress={() => this.callPhone()}>
                             <View style={styles.viewCenter}>
-                                <Text style={styles.textLeft}>{data.Tel}</Text>
+                                <Text style={styles.textLeft}>{data.Tel?data.Tel:'没有电话'}</Text>
                             </View>
                         </Touchable>
                         <View style={styles.viewCenter}>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            height: 96,
+            height: 72,
             // paddingTop: 16,
             paddingLeft: 16,
         },
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         },
         headerInfo: {
             flex: 1,
-            height: 96,
+            height: 72,
             flexDirection: 'column',
             justifyContent: 'center',
             paddingLeft: 16,
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         viewCenter: {
             paddingLeft: 16,
             paddingRight: 16,
-            height: 32,
+            height: 24,
             flexDirection: 'column',
             justifyContent: 'center',
         }
