@@ -35,7 +35,7 @@ class GamePage extends Component {
     getMyAppList() {
         let img = require('../../assets/images/group.png');
         let appList = [
-            {id: 1, icon: img, title: '图标1', link: '', route: 'CorpGroup', color: THEME_DARK},
+            {id: 1, icon: img, title: '企业圈', link: '', route: 'CorpGroup', color: THEME_DARK},
         ];
         return appList;
     }
