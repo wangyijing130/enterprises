@@ -1,33 +1,30 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {View, Text, StyleSheet, Image,} from 'react-native';
-import {THEME, THEME_BODY_BG, THEME_BG, THEME_LIGHT} from '../../assets/css/color';
+import {THEME_BG} from '../../assets/css/color';
 import {uploadRoot} from '../../core/httpInterface';
 
-export class PersonHeader extends Component {
+class PersonHeader extends Component {
+    photoSource;
+    showName;
+
     constructor(props) {
         super(props);
     }
 
     render() {
-        let user = this.props.user;
-        // let photoSource = 'https://b-ssl.duitang.com/uploads/item/201310/07/20131007112359_VYSfX.thumb.700_0.jpeg';
         let photoSource = require('../../assets/images/person.png');
-        let showName = user.CustomerName;
-        if (user) {
-            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
-            showName = user.NickName ? user.NickName : user.CustomerName;
-        }
         return (
             <View style={phStyles.container}>
                 <View style={phStyles.headerBox}>
                     <View style={phStyles.headerImg}>
                         <Image style={{flex: 1}}
-                               source={photoSource}
-                        />
+                               source={this.props.user.Photo ? {uri: uploadRoot + this.props.user.Photo} : photoSource}/>
                     </View>
                     <View style={phStyles.headerInfo}>
                         <View style={phStyles.viewCenter}>
-                            <Text style={phStyles.textLeft}>{showName}</Text>
+                            <Text
+                                style={phStyles.textLeft}>{this.props.user && (this.props.user.NickName ? this.props.user.NickName : this.props.user.CustomerName)}</Text>
                         </View>
                         <View style={phStyles.viewCenter}>
                             <Text style={phStyles.textLeft}>{this.props.user && this.props.user.Tel }</Text>
@@ -54,6 +51,15 @@ export class PersonHeader extends Component {
 
 }
 
+export default connect(
+    (state) => ({
+        status: state.loginIn.status,
+        isSuccess: state.loginIn.isSuccess,
+        user: state.loginIn.user,
+        error: state.loginIn.error,
+    }),
+    (dispatch) => ({})
+)(PersonHeader)
 
 const phStyles = StyleSheet.create({
         container: {

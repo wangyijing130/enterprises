@@ -22,11 +22,10 @@ export class PersonMenu extends Component {
     }
 
     userInfo() {
-        this.props.navigation.navigate('UserInfo', {user: this.props.user});
+        this.props.navigation.navigate('UserInfo');
     }
 
     companyInfo() {
-
         // this.props.navigation.navigate('CompanyInfo', {user: this.props.user});
     }
 
@@ -44,6 +43,7 @@ export class PersonMenu extends Component {
 
     doLogout() {
         global.storage.remove({key: 'user'});
+        global.user = null;
         this.props.navigation.dispatch(resetAction)
     }
 

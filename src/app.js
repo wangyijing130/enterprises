@@ -10,7 +10,7 @@ import {CWebView} from './app/common/webview';
 import {MainNavigator} from './app/main/main'; // 主页面路由导航
 import {TransitionConfiguration} from './core/transitionConfiguration';
 import {StackNavOptions} from './app/common/navigatorOpts';
-import {UserInfoPage} from './app/person/userInfoPage';
+import UserInfoPage from './app/person/userInfoPage';
 import {UpdatePwdPage} from './app/person/updatePwdPage';
 import {AsyncStorage} from 'react-native';
 import Storage from 'react-native-storage';

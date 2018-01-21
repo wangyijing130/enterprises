@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import * as loginAction from '../login/loginAction';// 导入action方法
 import {
     View, StyleSheet, Platform, TextInput, ScrollView, Image, Text, Touchable,
     TouchableOpacity,
@@ -6,11 +8,10 @@ import {
 } from 'react-native';
 import CButton from '../common/button';
 
-import {layoutStyles, pageStyles} from '../../assets/css/layout';
-import {BORDER_COLOR, THEME_BG, THEME_DARK, THEME_LIGHT, THEME_TEXT} from '../../assets/css/color';
+import {pageStyles} from '../../assets/css/layout';
+import {BORDER_COLOR, THEME_BG, THEME_TEXT} from '../../assets/css/color';
 import {appService, httpClient, uploadRoot} from '../../core/httpInterface';
 import {toastShort} from '../../core/toastUtil';
-const Buffer = require('buffer').Buffer;
 const ImagePicker = require('react-native-image-picker');
 const options = {
     title: '选择图片',
@@ -31,7 +32,7 @@ const options = {
     }
 };
 
-export class UserInfoPage extends Component {
+class UserInfoPage extends Component {
     static navigationOptions = {
         title: '个人资料',
     };
@@ -45,14 +46,28 @@ export class UserInfoPage extends Component {
 
     constructor(props) {
         super(props);
-        const user = this.props.navigation.state.params.user;
+        let user = this.props.user;
+        let photoSource = require('../../assets/images/person.png');
+        photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
+        this.state = {photo: photoSource, user: user};
+        this.loadUserInfo(this.state.user);
+    }
+
+    componentDidUpdate() {
+        let user = this.props.user;
+        if (user) {
+            this.loadUserInfo(user);
+        }
+    }
+
+    loadUserInfo(user) {
         if (user) {
             this.customerName = user.CustomerName ? user.CustomerName : '';
             this.nickName = user.NickName ? user.NickName : '';
             this.sex = user.Sex ? user.Sex : '男';
-            this.idCard = user.IdCard ? user.IdCard : '';
             this.address = user.Address ? user.Address : '';
             this.introduce = user.Introduce ? user.Introduce : '';
+            this.idCard = user.IdCard ? user.IdCard : '';
             if (this.idCard && this.idCard.length > 10) {
                 this.idCardShow = this.idCard.substr(0, 3) + '*******' + this.idCard.substr(this.idCard.length - 4, 4);
             }
@@ -60,7 +75,8 @@ export class UserInfoPage extends Component {
     }
 
     openImgPicker() {
-        const user = this.props.navigation.state.params.user;
+        const {reLogin} = this.props;
+        let user = this.state.user;
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -71,15 +87,27 @@ export class UserInfoPage extends Component {
                     return;
                 }
                 let imgbase64 = 'data:image/jpeg;base64,' + response.data;
-                let dataString = 'customerId=' + user.Id + '&imgbase64=' + imgbase64;
+                // this.setState({photo: {uri:imgbase64}});
+                let dataString = 'customerId=' + user.Id + '&imgbase64=' + encodeURIComponent(imgbase64);
                 httpClient.post(appService.UploadImgBase64, dataString).then(res => {
-                    toastShort('头像修改成功！');
-                    user.Photo = imgbase64;
-                    if (global.storage) {
-                        global.storage.save({
-                            key: 'user',
-                            data: user
-                        })
+                    if (res && res.IsSuc) {
+                        user.Photo = res.Data;
+                        toastShort('头像修改成功');
+                        if (global.storage) {
+                            global.storage.save({
+                                key: 'user',
+                                data: user
+                            })
+                        }
+                        let photoSource = require('../../assets/images/person.png');
+                        if (user) {
+                            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
+                        }
+                        this.setState({photo: photoSource, user: user});
+                        this.loadUserInfo(this.state.user);
+                        reLogin(this.state.user);
+                    } else {
+                        toastShort(res.ErrMsg || '头像修改失败');
                     }
                 });
             }
@@ -92,7 +120,8 @@ export class UserInfoPage extends Component {
             toastShort('用户名不能为空');
             return;
         }
-        const user = this.props.navigation.state.params.user;
+        let user = this.state.user;
+        const {reLogin} = this.props;
         let dataString = 'customerId=' + user.Id + '&customerName=' + encodeURIComponent(this.customerName);
         dataString += '&nickName=' + (this.nickName ? encodeURIComponent(this.nickName) : '');
         dataString += '&sex=' + (this.sex ? encodeURIComponent(this.sex) : '');
@@ -108,12 +137,9 @@ export class UserInfoPage extends Component {
                 user.IdCard = this.idCard;
                 user.Address = this.address;
                 user.Introduce = this.introduce;
-                if (global.storage) {
-                    global.storage.save({
-                        key: 'user',
-                        data: user
-                    })
-                }
+                this.setState({user: user});
+                this.loadUserInfo(this.state.user);
+                reLogin(this.state.user);
                 setTimeout(() => {
                     this.props.navigation.goBack();
                 }, 1500);
@@ -125,17 +151,13 @@ export class UserInfoPage extends Component {
 
     render() {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-        const user = this.props.navigation.state.params.user;
-        let photoSource = require('../../assets/images/person.png');
-        if (user) {
-            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
-        }
+        let user = this.state.user;
         return (
             <ScrollView style={pageStyles.container}>
                 <View style={styles.header}>
                     <Touchable onPress={() => this.openImgPicker()}>
                         <View style={styles.headerImg}>
-                            <Image style={{flex: 1}} source={photoSource}/>
+                            <Image style={{flex: 1}} source={this.state.photo}/>
                         </View>
                     </Touchable>
                 </View>
@@ -201,6 +223,21 @@ export class UserInfoPage extends Component {
         )
     }
 }
+
+
+export default connect(
+    (state) => {
+        return {
+            status: state.loginIn.status,
+            isSuccess: state.loginIn.isSuccess,
+            user: state.loginIn.user,
+            error: state.loginIn.error,
+        }
+    },
+    (dispatch) => ({
+        reLogin: (u) => dispatch(loginAction.reLogin(u)),
+    })
+)(UserInfoPage)
 
 const styles = StyleSheet.create({
     container: {

@@ -129,6 +129,5 @@ export default connect(
     }),
     (dispatch) => ({
         login: (m, p) => dispatch(loginAction.login(m, p)),
-        reLogin: (u) => dispatch(loginAction.reLogin(u)),
     })
 )(LoginPage)

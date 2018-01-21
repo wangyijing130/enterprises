@@ -4,18 +4,18 @@ import * as types from '../constants/loginTypes';
 import {appService, httpClient} from '../../core/httpInterface';
 
 // 模拟用户信息
-let user = {
+let emptyser = {
     Id: 0,
     NickName: '',
-    CustomerName: '羿璟',
+    CustomerName: '',
     IDCard: '',
     Address: '',
     Photo: '',
     Sex: '',
     RegCity: '',
     RegDistrict: '',
-    pwd: '123456',
-    Tel: '13510005217',
+    pwd: '',
+    Tel: '',
     CompanyId: 0,
     CompanyName: '',
     InvitationCode: '',
@@ -24,10 +24,8 @@ let user = {
 
 // 访问登录接口 根据返回结果来划分action属于哪个type,然后返回对象,给reducer处理
 export function login(mobile, password) {
-    console.log('登录方法');
     return dispatch => {
         dispatch(isLogining());
-
         let dataString = 'tel=' + mobile + '&pwd=' + password + '&code=&type=1';
         httpClient.post(appService.Login, dataString).then(res => {
             if (res && res.IsSuc) {
@@ -59,9 +57,24 @@ export function login(mobile, password) {
         });
     }
 }
-export function reLogin(user) {
+export function reLogin(u) {
+    let reUser = {
+        Id: u.Id,
+        Tel: u.Tel,
+        CustomerName: u.CustomerName,
+        NickName: u.NickName,
+        Sex: u.Sex,
+        Photo: u.Photo,
+        RegCity: u.RegCity,
+        RegDistrict: u.RegDistrict,
+        IDCard: u.IDCard,
+        Address: u.Address,
+        CompanyId: u.CompanyId,
+        CompanyName: u.CompanyName,
+        InvitationCode: u.InvitationCode,
+    };
     return dispatch => {
-        dispatch(loginSuccess(true, user));
+        dispatch(loginSuccess(true, reUser));
     }
 }
 
@@ -72,6 +85,7 @@ function isLogining() {
 }
 
 function loginSuccess(isSuccess, user) {
+    global.user = user;
     if (global.storage) {
         global.storage.save({
             key: 'user',
@@ -90,6 +104,7 @@ function loginSuccess(isSuccess, user) {
 }
 
 function loginError(isSuccess, msg) {
+    global.user = null;
     return {
         type: types.LOGIN_IN_ERROR,
         error: msg
