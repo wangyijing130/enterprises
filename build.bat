@@ -1,1 +1,1 @@
-android/gradlew installRelease
+./android/gradlew installRelease

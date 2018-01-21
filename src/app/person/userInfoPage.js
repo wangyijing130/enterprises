@@ -47,10 +47,7 @@ class UserInfoPage extends Component {
     constructor(props) {
         super(props);
         let user = this.props.user;
-        let photoSource = require('../../assets/images/person.png');
-        photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
-        this.state = {photo: photoSource, user: user};
-        this.loadUserInfo(this.state.user);
+        this.loadUserInfo(user);
     }
 
     componentDidUpdate() {
@@ -67,7 +64,7 @@ class UserInfoPage extends Component {
             this.sex = user.Sex ? user.Sex : '男';
             this.address = user.Address ? user.Address : '';
             this.introduce = user.Introduce ? user.Introduce : '';
-            this.idCard = user.IdCard ? user.IdCard : '';
+            this.idCard = user.IDCard ? user.IDCard : '';
             if (this.idCard && this.idCard.length > 10) {
                 this.idCardShow = this.idCard.substr(0, 3) + '*******' + this.idCard.substr(this.idCard.length - 4, 4);
             }
@@ -76,7 +73,7 @@ class UserInfoPage extends Component {
 
     openImgPicker() {
         const {reLogin} = this.props;
-        let user = this.state.user;
+        let user = this.props.user;
         ImagePicker.showImagePicker(options, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -87,7 +84,6 @@ class UserInfoPage extends Component {
                     return;
                 }
                 let imgbase64 = 'data:image/jpeg;base64,' + response.data;
-                // this.setState({photo: {uri:imgbase64}});
                 let dataString = 'customerId=' + user.Id + '&imgbase64=' + encodeURIComponent(imgbase64);
                 httpClient.post(appService.UploadImgBase64, dataString).then(res => {
                     if (res && res.IsSuc) {
@@ -99,13 +95,8 @@ class UserInfoPage extends Component {
                                 data: user
                             })
                         }
-                        let photoSource = require('../../assets/images/person.png');
-                        if (user) {
-                            photoSource = user.Photo ? {uri: uploadRoot + user.Photo} : photoSource;
-                        }
-                        this.setState({photo: photoSource, user: user});
-                        this.loadUserInfo(this.state.user);
-                        reLogin(this.state.user);
+                        this.loadUserInfo(user);
+                        reLogin(user);
                     } else {
                         toastShort(res.ErrMsg || '头像修改失败');
                     }
@@ -120,9 +111,8 @@ class UserInfoPage extends Component {
             toastShort('用户名不能为空');
             return;
         }
-        let user = this.state.user;
         const {reLogin} = this.props;
-        let dataString = 'customerId=' + user.Id + '&customerName=' + encodeURIComponent(this.customerName);
+        let dataString = 'customerId=' + this.props.user.Id + '&customerName=' + encodeURIComponent(this.customerName);
         dataString += '&nickName=' + (this.nickName ? encodeURIComponent(this.nickName) : '');
         dataString += '&sex=' + (this.sex ? encodeURIComponent(this.sex) : '');
         dataString += '&idCard=' + (this.idCard ? encodeURIComponent(this.idCard) : '');
@@ -131,15 +121,14 @@ class UserInfoPage extends Component {
         httpClient.post(appService.UpdateCustomerInfo, dataString).then(res => {
             if (res && res.IsSuc) {
                 toastShort('修改成功！');
-                user.CustomerName = this.customerName;
-                user.NickName = this.nickName;
-                user.Sex = this.sex;
-                user.IdCard = this.idCard;
-                user.Address = this.address;
-                user.Introduce = this.introduce;
-                this.setState({user: user});
-                this.loadUserInfo(this.state.user);
-                reLogin(this.state.user);
+                this.props.user.CustomerName = this.customerName;
+                this.props.user.NickName = this.nickName;
+                this.props.user.Sex = this.sex;
+                this.props.user.IDCard = this.idCard;
+                this.props.user.Address = this.address;
+                this.props.user.Introduce = this.introduce;
+                this.loadUserInfo(this.props.user);
+                reLogin(this.props.user);
                 setTimeout(() => {
                     this.props.navigation.goBack();
                 }, 1500);
@@ -151,13 +140,14 @@ class UserInfoPage extends Component {
 
     render() {
         const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-        let user = this.state.user;
+        let photoSource = require('../../assets/images/person.png');
         return (
             <ScrollView style={pageStyles.container}>
                 <View style={styles.header}>
                     <Touchable onPress={() => this.openImgPicker()}>
                         <View style={styles.headerImg}>
-                            <Image style={{flex: 1}} source={this.state.photo}/>
+                            <Image style={{flex: 1}}
+                                   source={this.props.user.Photo ? {uri: uploadRoot + this.props.user.Photo} : photoSource}/>
                         </View>
                     </Touchable>
                 </View>
