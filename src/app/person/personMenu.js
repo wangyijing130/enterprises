@@ -38,6 +38,10 @@ export class PersonMenu extends Component {
         this.props.navigation.navigate('FeedBack', {user: this.props.user});
     }
 
+    imgorc() {
+        this.props.navigation.navigate('ImgOcr', {user: this.props.user});
+    }
+
     clearCache() {
     }
 
@@ -70,6 +74,11 @@ export class PersonMenu extends Component {
                     <Touchable onPress={() => this.feedBack()}>
                         <View style={styles.groupItem}>
                             <Text style={styles.textLeft}>意见反馈</Text>
+                        </View>
+                    </Touchable>
+                    <Touchable onPress={() => this.imgorc()}>
+                        <View style={styles.groupItem}>
+                            <Text style={styles.textLeft}>图片识别</Text>
                         </View>
                     </Touchable>
                 </View>

@@ -22,12 +22,19 @@ export const httpClient = {
         let defaultHeaders = {
             'Content-Type': 'application/x-www-form-urlencoded',
         };
+        if (!headers) {
+            headers = defaultHeaders;
+        }
+        let h = {
+            ...defaultHeaders,
+            ...headers
+        };
         return new Promise(function (resolve, reject) {
             fetch(url, {
                 method: 'POST',
                 headers: {
-                    ...defaultHeaders,
-                    headers
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: dataString
             }).then(response => {

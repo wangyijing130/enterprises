@@ -15,6 +15,7 @@ import {UpdatePwdPage} from './app/person/updatePwdPage';
 import {AsyncStorage} from 'react-native';
 import Storage from 'react-native-storage';
 import {CorpGroupNavigator} from './app/corpGroup/corpGroup';
+import {ImgOcrPage} from './app/person/imgOcrPage';
 
 let getStorage = () => {
     let storage = new Storage({
@@ -43,6 +44,7 @@ const App = StackNavigator({
     FeedBack: {screen: FeedBackPage},
     UserInfo: {screen: UserInfoPage},
     UpdatePwd: {screen: UpdatePwdPage},
+    ImgOcr: {screen: ImgOcrPage},
     Main: { // 主页面
         screen: MainNavigator, // tab导航配置
         navigationOptions: ({navigation}) => ({
@@ -59,3 +61,4 @@ const App = StackNavigator({
     transitionConfig: TransitionConfiguration
 });
 export default App;
+

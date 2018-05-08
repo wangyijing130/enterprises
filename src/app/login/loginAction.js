@@ -5,9 +5,9 @@ import {appService, httpClient} from '../../core/httpInterface';
 
 // 模拟用户信息
 let emptyser = {
-    Id: 0,
-    NickName: '',
-    CustomerName: '',
+    Id: 10,
+    NickName: '10',
+    CustomerName: '10',
     IDCard: '',
     Address: '',
     Photo: '',
@@ -26,7 +26,8 @@ let emptyser = {
 export function login(mobile, password) {
     return dispatch => {
         dispatch(isLogining());
-        let dataString = 'tel=' + mobile + '&pwd=' + password + '&code=&type=1';
+        dispatch(loginSuccess(true, emptyser));
+        /*let dataString = 'tel=' + mobile + '&pwd=' + password + '&code=&type=1';
         httpClient.post(appService.Login, dataString).then(res => {
             if (res && res.IsSuc) {
                 let u = res.Data;
@@ -55,7 +56,7 @@ export function login(mobile, password) {
             }
         }).catch((e) => {
             dispatch(loginError(false, e.message));
-        });
+        });*/
     }
 }
 export function reLogin(u) {
